@@ -2,21 +2,9 @@ Ext.define('Pente.view.GameView', {
     extend: 'Ext.panel.Panel',
     alias: 'widget.gameview',
     bodyStyle: 'background-color:#503200;',
+    requires: [ 'Pente.view.Table' ],
     items: [
-        {
-            xtype: 'draw',
-            x: 200,
-            y: 100,
-            viewBox: false,
-            items: [{
-                type: 'circle',
-                fill: '#ffc',
-                radius: 100,
-                x: 100,
-                y: 100
-            }],
-            renderTo: document.body
-        }
+        { xtype: 'pentetable' }
     ],
 
     initComponent: function () {
