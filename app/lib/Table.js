@@ -1,4 +1,4 @@
-Ext.define('Pente.view.Table', {
+Ext.define('Pente.lib.Table', {
     extend: 'Ext.draw.Component',
     alias: 'widget.pentetable',
     viewBox: false,

@@ -4,6 +4,8 @@ Ext.application({
     controllers: [ 'GameController' ],
 
     launch: function () {
+        var BoardType = Ext.ModelManager.getModel('Pente.model.Board');
+
         Ext.create('Ext.window.Window', {
             height: 480,
             width: 438,

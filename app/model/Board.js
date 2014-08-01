@@ -7,6 +7,10 @@ Ext.define('Pente.model.Board', {
         return 19;
     },
 
+    getDimensions: function () {
+        return null;
+    },
+
     boardEntries: function () {
         return boardSize() * boardSize();
     },
