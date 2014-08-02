@@ -1,18 +1,25 @@
 Ext.define('Pente.model.Board', {
     extend: 'Ext.data.Model',
+    singleton: true,
     fields: [],
     vectors: null,
 
-    boardSize: function () {
-        return 19;
+    statics: {
+        boardSize: 19,
+        cxBorder: 20,
+        cyBorder: 20,
+        cxOffset: 2,
+        cyOffset: 2,
+        cxSquares: 19 - 1,
+        cySquares: 19 - 1,
+        squareSize: 21,
+        boardEntries: 19 * 19,
+        dimensions: function () {
+        }
     },
 
-    getDimensions: function () {
-        return null;
-    },
-
-    boardEntries: function () {
-        return boardSize() * boardSize();
+    constructor: function (config) {
+        console.log('Board was constructed...');
     },
 
     getEntry: function (x, y) {
