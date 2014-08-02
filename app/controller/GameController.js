@@ -1,11 +1,11 @@
 Ext.define('Pente.controller.GameController', {
     extend: 'Ext.app.Controller',
     models: [ 'Board' ],
-    views: [ 'GameView' ],
+    views: [ 'View' ],
 
     init: function () {
         this.control({
-            'gameview': {
+            'view': {
                 render: this.onViewRendered
             }
         });

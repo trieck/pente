@@ -1,6 +1,6 @@
 Ext.define('Pente.lib.Table', {
     extend: 'Ext.draw.Component',
-    alias: 'widget.pentetable',
+    alias: 'widget.pente-table',
     viewBox: false,
     items: [
         {

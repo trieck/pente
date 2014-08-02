@@ -1,13 +1,14 @@
 Ext.define('Pente.lib.Frame', {
     extend: 'Ext.window.Window',
-    requires: [ 'Pente.lib.Toolbar' ],
+    requires: [ 'Pente.lib.Toolbar', 'Pente.lib.Statusbar' ],
     frame: true,
     closable: false,
     title: 'Pente for ExtJS',
     border: true,
-   items: [
-        { xtype: 'pentebar' },
-        { xtype: 'gameview' }
+    items: [
+        { xtype: 'pente-toolbar' },
+        { xtype: 'pente-view' },
+        { xtype: 'pente-statusbar' }
     ],
     resizable: false,
 

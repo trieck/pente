@@ -1,6 +1,6 @@
 Ext.define('Pente.lib.Toolbar', {
     extend: 'Ext.Toolbar',
-    alias: 'widget.pentebar',
+    alias: 'widget.pente-toolbar',
     items: [
         {
             xtype: 'button',

@@ -1,10 +1,10 @@
-Ext.define('Pente.view.GameView', {
+Ext.define('Pente.view.View', {
     extend: 'Ext.panel.Panel',
-    alias: 'widget.gameview',
+    alias: 'widget.pente-view',
     bodyStyle: 'background-color:#503200;',
     requires: [ 'Pente.lib.Table' ],
     items: [
-        { xtype: 'pentetable' }
+        { xtype: 'pente-table' }
     ],
 
     initComponent: function () {
