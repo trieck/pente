@@ -6,8 +6,7 @@ Ext.define('Pente.lib.Table', {
         {
             type: "path",
             path: "M75,75 c0,-25 50,25 50,0 c0,-25 -50,25 -50,0",
-            fill: "purple"
+            fill: "#ccc"
         }
-    ],
-    renderTo: document.body
+    ]
 });

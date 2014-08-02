@@ -1,26 +1,29 @@
 Ext.define('Pente.model.Board', {
     extend: 'Ext.data.Model',
-    singleton: true,
-    fields: [],
-    vectors: null,
-
     statics: {
         boardSize: 19,
         cxBorder: 20,
         cyBorder: 20,
         cxOffset: 2,
         cyOffset: 2,
-        cxSquares: 19 - 1,
-        cySquares: 19 - 1,
+        cxSquares: 18,
+        cySquares: 18,
         squareSize: 21,
         boardEntries: 19 * 19,
         dimensions: function () {
+            var right = this.squareSize * this.cxSquares;
+            var bottom = this.squareSize * this.cySquares;
+            return new Ext.util.Region(0, right, bottom, 0);
+        },
+        boundingRect: function () {
+            var dims = this.dimensions();
+            dims.right += this.cxBorder * 2;
+            dims.bottom += this.cyBorder * 2;
+            return dims;
         }
     },
 
-    constructor: function (config) {
-        console.log('Board was constructed...');
-    },
+    vectors: null,
 
     getEntry: function (x, y) {
         return null;
@@ -46,28 +49,15 @@ Ext.define('Pente.model.Board', {
         return true;
     },
 
-
-    getVectors: function () {
-        return this.vectors;
-    },
-
     winner: function (player) {
         return null;
-    },
-
-    size: function () {
-        return 0;
     },
 
     getCaptures: function (x, y, captureVec) {
         return null;
     },
 
-    /*
-     * @private
-     */
     generate: function () {
-
     }
 
 });
