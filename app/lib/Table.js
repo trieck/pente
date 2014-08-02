@@ -5,7 +5,7 @@ Ext.define('Pente.lib.Table', {
     items: [
         {
             type: "path",
-            path: "M75,75 c0,-25 50,25 50,0 c0,-25 -50,25 -50,0",
+            path: "M75,75",
             fill: "#ccc"
         }
     ]

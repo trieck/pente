@@ -13,10 +13,8 @@ Ext.define('Pente.controller.GameController', {
 
     onViewRendered: function (view) {
         view.body.on('click', this.onClicked);
-        console.log('The view was rendered');
     },
 
     onClicked: function () {
-        console.log('The view was clicked');
     }
 });
