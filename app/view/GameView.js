@@ -8,7 +8,10 @@ Ext.define('Pente.view.GameView', {
     ],
 
     initComponent: function () {
-        console.log('The view was initialized!');
+        var dims = Pente.model.Board.boundingRect();
+        var size = dims.getSize();
+        this.height = size.height;
+        this.width = size.width;
         this.callParent(arguments);
     }
 });
