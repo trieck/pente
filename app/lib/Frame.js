@@ -1,6 +1,6 @@
 Ext.define('Pente.lib.Frame', {
     extend: 'Ext.window.Window',
-    requires: [ 'Pente.lib.Toolbar', 'Pente.lib.Statusbar' ],
+    requires: [ 'Pente.lib.Toolbar', 'Pente.lib.Statuspanel' ],
     frame: true,
     closable: false,
     title: 'Pente for ExtJS',
@@ -8,7 +8,7 @@ Ext.define('Pente.lib.Frame', {
     items: [
         { xtype: 'pente-toolbar' },
         { xtype: 'pente-view' },
-        { xtype: 'pente-statusbar' }
+        { xtype: 'pente-statuspanel' }
     ],
     resizable: false,
 
