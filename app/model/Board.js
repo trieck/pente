@@ -10,9 +10,15 @@ Ext.define('Pente.model.Board', {
         cySquares: 18,
         squareSize: 21,
         boardEntries: 19 * 19,
+        width: function () {
+            return this.squareSize * this.cxSquares;
+        },
+        height: function () {
+            return this.squareSize * this.cySquares;
+        },
         dimensions: function () {
-            var right = this.squareSize * this.cxSquares;
-            var bottom = this.squareSize * this.cySquares;
+            var right = this.width();
+            var bottom = this.height();
             return new Ext.util.Region(0, right, bottom, 0);
         },
         boundingRect: function () {
