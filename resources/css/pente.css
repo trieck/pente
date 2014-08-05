@@ -1,0 +1,11 @@
+.new {
+    background-image: url(/resources/images/new.png) !important;
+}
+
+.gear {
+    background-image: url(/resources/images/gear.png) !important;
+}
+
+.help {
+    background-image: url(/resources/images/help.png) !important;
+}
