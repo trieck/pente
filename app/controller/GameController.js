@@ -19,8 +19,11 @@ Ext.define('Pente.controller.GameController', {
 			var event = e.browserEvent;
 			var x = event.offsetX ? event.offsetX : event.layerX;
 			var y = event.offsetY ? event.offsetY : event.layerY;
-			var b = Pente.model.Board.ptOnBoard(x, y);
-			Ext.Msg.alert("" + b);
+			var bOnBoard = Pente.model.Board.ptOnBoard(x, y);
+			if (bOnBoard) {
+				var pt = Pente.model.Board.getSquare(x, y);
+				Ext.Msg.alert(Ext.String.format("{0},{1}", pt.x, pt.y));
+			}
 		}
 	}
 );

@@ -2,6 +2,8 @@ Ext.define('Pente.model.Board', {
 	extend: 'Ext.data.Model',
 	statics: {
 		boardSize: 19,
+		cxPiece: 18,
+		cyPiece: 18,
 		cxBorder: 20,
 		cyBorder: 20,
 		cxOffset: 2,
@@ -29,10 +31,23 @@ Ext.define('Pente.model.Board', {
 		},
 		ptOnBoard: function (x, y) {
 			var dims = this.dimensions().copy();
+			dims.adjust(-(this.cyPiece / 2), this.cxPiece / 2, this.cyPiece / 2, -(this.cxPiece / 2));
 			dims.adjust(this.cyBorder, this.cyBorder, this.cyBorder, this.cxBorder);
 			if (x >= dims.x && y >= dims.y && x < dims.right && y < dims.bottom)
 				return true;
 			return false;
+		},
+		getSquare: function (x, y) {
+			var aPoint = Ext.create('Ext.util.Point', x, y);
+
+			aPoint.x -= (this.cxBorder - (this.cxPiece / 2));
+			aPoint.y -= (this.cyBorder - (this.cyPiece / 2));
+
+			var ptSquare = Ext.create('Ext.util.Point');
+			ptSquare.x = parseInt(Math.min(Math.max(0, (aPoint.x / this.squareSize)), this.cxSquares), 10);
+			ptSquare.y = parseInt(Math.min(Math.max(0, (aPoint.y / this.squareSize)), this.cySquares), 10);
+
+			return ptSquare;
 		}
 	},
 
