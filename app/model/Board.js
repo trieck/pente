@@ -11,7 +11,6 @@ Ext.define('Pente.model.Board', {
 		cxSquares: 18,
 		cySquares: 18,
 		squareSize: 21,
-		boardEntries: 19 * 19,
 		width: function () {
 			return this.squareSize * this.cxSquares;
 		},
@@ -33,9 +32,7 @@ Ext.define('Pente.model.Board', {
 			var dims = this.dimensions().copy();
 			dims.adjust(-(this.cyPiece / 2), this.cxPiece / 2, this.cyPiece / 2, -(this.cxPiece / 2));
 			dims.adjust(this.cyBorder, this.cyBorder, this.cyBorder, this.cxBorder);
-			if (x >= dims.x && y >= dims.y && x < dims.right && y < dims.bottom)
-				return true;
-			return false;
+			return !!(x >= dims.x && y >= dims.y && x < dims.right && y < dims.bottom);
 		},
 		getSquare: function (x, y) {
 			var aPoint = Ext.create('Ext.util.Point', x, y);
@@ -48,44 +45,37 @@ Ext.define('Pente.model.Board', {
 			ptSquare.y = parseInt(Math.min(Math.max(0, (aPoint.y / this.squareSize)), this.cySquares), 10);
 
 			return ptSquare;
+		},
+		key: function (x, y) {
+			return (y % this.boardSize) * this.boardSize + (x % this.boardSize);
 		}
 	},
 
+	rep: {},
 	vectors: null,
 
 	getEntry: function (x, y) {
-		return null;
+		var k = this.self.key(x, y);
+		return this.rep.hasOwnProperty(k);
 	},
 
-	setEntry: function (x, y, type) {
-
+	setEntry: function (x, y) {
+		var k = this.self.key(x, y);
+		this.rep[k] = 1;
 	},
 
-	remove: function (x, y) {
+	addPiece: function (pt) {
+		if (this.getEntry(pt.x, pt.y))
+			return false;
 
-	},
+		this.setEntry(pt.x, pt.y);
 
-	clear: function () {
-
-	},
-
-	enumEntries: function () {
-
-	},
-
-	empty: function () {
 		return true;
 	},
-
-	winner: function (player) {
-		return null;
-	},
-
-	getCaptures: function (x, y, captureVec) {
-		return null;
-	},
-
-	generate: function () {
+	clear: function () {
+		this.rep = {};
 	}
+
+
 
 });
