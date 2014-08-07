@@ -2,7 +2,6 @@ Ext.define('Pente.controller.GameController', {
 		extend: 'Ext.app.Controller',
 		models: [ 'Pente.model.Board' ],
 		views: [ 'Pente.view.View' ],
-		board: null,
 
 		init: function () {
 			var BoardType = this.getPenteModelBoardModel();
@@ -15,6 +14,7 @@ Ext.define('Pente.controller.GameController', {
 		},
 
 		onViewRendered: function (view) {
+			this.view = view;
 			view.body.on('click', Ext.bind(this.onClicked, this));
 		},
 
@@ -25,7 +25,9 @@ Ext.define('Pente.controller.GameController', {
 			var bOnBoard = this.board.self.ptOnBoard(x, y);
 			if (bOnBoard) {
 				var pt = this.board.self.getSquare(x, y);
-				this.board.addPiece(pt);
+				if (this.board.addPiece(pt)) {
+					this.view.drawPiece(pt);
+				}
 			}
 		}
 	}
