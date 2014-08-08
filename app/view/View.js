@@ -2,9 +2,9 @@ Ext.define('Pente.view.View', {
 	extend: 'Ext.panel.Panel',
 	alias: 'widget.pente-view',
 	bodyStyle: 'background-color:#503200;',
-	requires: [ 'Pente.lib.Table' ],
+	requires: [ 'Pente.view.BoardPanel' ],
 	items: [
-		{ xtype: 'pente-table' }
+		{ xtype: 'board-panel' }
 	],
 
 	initComponent: function () {
@@ -16,5 +16,8 @@ Ext.define('Pente.view.View', {
 	},
 
 	drawPiece: function (pt) {
+		var panel = this.query('board-panel')[0];
+		if (panel)
+			panel.drawPiece(pt);
 	}
 });

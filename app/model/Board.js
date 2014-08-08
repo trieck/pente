@@ -46,6 +46,14 @@ Ext.define('Pente.model.Board', {
 
 			return ptSquare;
 		},
+		mapPoint: function (x, y) {
+			x = Math.min(Math.max(0, x), this.cxSquares);
+			y = Math.min(Math.max(0, y), this.cySquares);
+			x = (this.cxBorder - (this.cxPiece / 2)) + (x * this.squareSize);
+			y = (this.cyBorder - (this.cyPiece / 2)) + (y * this.squareSize);
+			return Ext.create('Ext.util.Point', x, y);
+		},
+
 		key: function (x, y) {
 			return (y % this.boardSize) * this.boardSize + (x % this.boardSize);
 		}
@@ -75,7 +83,4 @@ Ext.define('Pente.model.Board', {
 	clear: function () {
 		this.rep = {};
 	}
-
-
-
 });

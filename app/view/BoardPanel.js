@@ -1,6 +1,6 @@
-Ext.define('Pente.lib.Table', {
+Ext.define('Pente.view.BoardPanel', {
 	extend: 'Ext.draw.Component',
-	alias: 'widget.pente-table',
+	alias: 'widget.board-panel',
 	requires: [ 'Pente.model.Board' ],
 	viewBox: false,
 	items: [],
@@ -52,5 +52,17 @@ Ext.define('Pente.lib.Table', {
 		}
 
 		this.callParent(arguments);
+	},
+
+	drawPiece: function (pt) {
+		var bt = Pente.model.Board;
+		var mapped = bt.mapPoint(pt.x, pt.y);
+
+		this.surface.add({
+			type: 'circle',
+			fill: '#008000',
+			radius: bt.cxPiece / 2,
+			x: mapped.x + (bt.cxPiece / 2),
+			y: mapped.y + (bt.cyPiece / 2)}).show(true);
 	}
 });
