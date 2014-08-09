@@ -1,9 +1,10 @@
 Ext.application({
-    name: 'Pente',
-    appFolder: 'app',
-    controllers: [ 'GameController' ],
+	name: 'Pente',
+	appFolder: 'app',
+	controllers: [ 'Controller' ],
+	uses: 'Pente.lib.Frame',
 
-    launch: function () {
-        Ext.create('Pente.lib.Frame').show();
-    }
+	launch: function () {
+		Ext.create('pente-frame').show();
+	}
 });

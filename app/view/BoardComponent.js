@@ -31,7 +31,7 @@ Ext.define('Pente.view.BoardComponent', {
 				type: 'path',
 				path: path,
 				stroke: '#c0c0c0',
-				'stroke-width': 1
+				'stroke-width':.5
 			};
 			this.items.push(item);
 			ptStart.x += cx;
@@ -46,7 +46,7 @@ Ext.define('Pente.view.BoardComponent', {
 				type: 'path',
 				path: path,
 				stroke: '#c0c0c0',
-				'stroke-width': 1
+				'stroke-width':.5
 			};
 			this.items.push(item);
 			ptStart.y += cy;
@@ -56,7 +56,7 @@ Ext.define('Pente.view.BoardComponent', {
 		var size = dims.getSize();
 		this.height = size.height;
 		this.width = size.width;
-		
+
 		this.callParent(arguments);
 	},
 

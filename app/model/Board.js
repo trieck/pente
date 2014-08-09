@@ -58,18 +58,15 @@ Ext.define('Pente.model.Board', {
 			return (y % this.boardSize) * this.boardSize + (x % this.boardSize);
 		}
 	},
-
-	rep: {},
-	vectors: null,
+	fields: [ 'key', 'who' ],
 
 	getEntry: function (x, y) {
 		var k = this.self.key(x, y);
-		return this.rep.hasOwnProperty(k);
+		return true;
 	},
 
 	setEntry: function (x, y) {
 		var k = this.self.key(x, y);
-		this.rep[k] = 1;
 	},
 
 	addPiece: function (pt) {
@@ -79,8 +76,5 @@ Ext.define('Pente.model.Board', {
 		this.setEntry(pt.x, pt.y);
 
 		return true;
-	},
-	clear: function () {
-		this.rep = {};
 	}
 });
