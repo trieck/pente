@@ -1,5 +1,4 @@
-Ext.define('Pente.model.Board', {
-	extend: 'Ext.data.Model',
+Ext.define('Pente.lib.Board', {
 	statics: {
 		boardSize: 19,
 		cxPiece: 18,
@@ -57,24 +56,5 @@ Ext.define('Pente.model.Board', {
 		key: function (x, y) {
 			return (y % this.boardSize) * this.boardSize + (x % this.boardSize);
 		}
-	},
-	fields: [ 'key', 'who' ],
-
-	getEntry: function (x, y) {
-		var k = this.self.key(x, y);
-		return true;
-	},
-
-	setEntry: function (x, y) {
-		var k = this.self.key(x, y);
-	},
-
-	addPiece: function (pt) {
-		if (this.getEntry(pt.x, pt.y))
-			return false;
-
-		this.setEntry(pt.x, pt.y);
-
-		return true;
 	}
 });

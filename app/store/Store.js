@@ -1,11 +1,15 @@
 Ext.define('Pente.store.Store', {
 	extend: 'Ext.data.Store',
-	model: 'Pente.model.Board',
+	model: 'Pente.model.Piece',
 	proxy: {
-		type: 'memory',
+		type: 'sessionstorage',
+		id: 'PenteProxyKey',
 		reader: {
-			model: 'Pente.model.Board',
+			model: 'Pente.model.Piece',
 			type: 'json'
 		}
+	},
+	load: function () {
+		this.callParent(arguments);
 	}
 });

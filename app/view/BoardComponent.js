@@ -1,11 +1,11 @@
 Ext.define('Pente.view.BoardComponent', {
 	extend: 'Ext.draw.Component',
 	alias: 'widget.board-component',
-	requires: [ 'Pente.model.Board' ],
+	requires: [ 'Pente.lib.Board' ],
 	viewBox: false,
 	items: [],
 	initComponent: function () {
-		var bt = Pente.model.Board;
+		var bt = Pente.lib.Board;
 		var dims = bt.dimensions();
 		var cx = bt.squareSize;
 		var cy = bt.squareSize;
@@ -52,7 +52,7 @@ Ext.define('Pente.view.BoardComponent', {
 			ptStart.y += cy;
 		}
 
-		dims = Pente.model.Board.boundingRect();
+		dims = Pente.lib.Board.boundingRect();
 		var size = dims.getSize();
 		this.height = size.height;
 		this.width = size.width;
@@ -61,7 +61,7 @@ Ext.define('Pente.view.BoardComponent', {
 	},
 
 	drawPiece: function (pt) {
-		var bt = Pente.model.Board;
+		var bt = Pente.lib.Board;
 		var mapped = bt.mapPoint(pt.x, pt.y);
 
 		var r = bt.cxPiece / 2;

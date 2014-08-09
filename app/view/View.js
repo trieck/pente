@@ -8,7 +8,7 @@ Ext.define('Pente.view.View', {
 	],
 
 	initComponent: function () {
-		var dims = Pente.model.Board.boundingRect();
+		var dims = Pente.lib.Board.boundingRect();
 		var size = dims.getSize();
 		this.height = size.height;
 		this.width = size.width;
