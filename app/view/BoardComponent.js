@@ -1,24 +1,25 @@
-Ext.define('Pente.view.BoardPanel', {
+Ext.define('Pente.view.BoardComponent', {
 	extend: 'Ext.draw.Component',
-	alias: 'widget.board-panel',
+	alias: 'widget.board-component',
 	requires: [ 'Pente.model.Board' ],
 	viewBox: false,
 	items: [],
 	initComponent: function () {
-		var dims = Pente.model.Board.dimensions();
-		var cx = Pente.model.Board.squareSize;
-		var cy = Pente.model.Board.squareSize;
-		var x = Pente.model.Board.cxBorder;
-		var y = Pente.model.Board.cyBorder;
+		var bt = Pente.model.Board;
+		var dims = bt.dimensions();
+		var cx = bt.squareSize;
+		var cy = bt.squareSize;
+		var x = bt.cxBorder;
+		var y = bt.cyBorder;
 
 		this.items.push({
 			type: 'rect',
-			width: Pente.model.Board.width(),
-			height: Pente.model.Board.height(),
+			width: bt.width(),
+			height: bt.height(),
 			fill: '#fff0d4',
 			stroke: '#c0c0c0',
-			x: Pente.model.Board.cxBorder,
-			y: Pente.model.Board.cyBorder
+			x: bt.cxBorder,
+			y: bt.cyBorder
 		});
 
 		// draw vertical lines
@@ -51,6 +52,11 @@ Ext.define('Pente.view.BoardPanel', {
 			ptStart.y += cy;
 		}
 
+		dims = Pente.model.Board.boundingRect();
+		var size = dims.getSize();
+		this.height = size.height;
+		this.width = size.width;
+		
 		this.callParent(arguments);
 	},
 
@@ -58,11 +64,18 @@ Ext.define('Pente.view.BoardPanel', {
 		var bt = Pente.model.Board;
 		var mapped = bt.mapPoint(pt.x, pt.y);
 
+		var r = bt.cxPiece / 2;
+		var x = mapped.x + (bt.cxPiece / 2);
+		var y = mapped.y + (bt.cyPiece / 2);
+
 		this.surface.add({
 			type: 'circle',
 			fill: '#008000',
-			radius: bt.cxPiece / 2,
-			x: mapped.x + (bt.cxPiece / 2),
-			y: mapped.y + (bt.cyPiece / 2)}).show(true);
+			stroke: '#004000',
+			'stroke-width': 1,
+			opacity: 1,
+			radius: r,
+			x: x,
+			y: y}).show(true);
 	}
 });
