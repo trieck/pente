@@ -15,9 +15,13 @@ Ext.define('Pente.controller.Controller', {
 			var store = this.getPenteStoreStoreStore();
 			store.on("load", this.onStoreLoad, this);
 			store.on("add", this.onStoreAdd, this);
+			store.on("bulkremove", this.onStoreBulkRemove, this);
 			this.control({
 				'pente-view': {
 					render: this.onViewRendered
+				},
+				'pente-toolbar > button#newButton': {
+					click: this.onNewGame
 				}
 			});
 		},
@@ -28,7 +32,7 @@ Ext.define('Pente.controller.Controller', {
 		},
 
 		onClicked: function (e) {
-			var pt, piece, view = this.getPenteView(), event = e.browserEvent;
+			var pt, piece, event = e.browserEvent;
 			var bt = Pente.lib.Board;
 			var store = this.getPenteStoreStoreStore();
 			var x = event.offsetX ? event.offsetX : event.layerX;
@@ -37,7 +41,7 @@ Ext.define('Pente.controller.Controller', {
 			if (bOnBoard) {
 				pt = bt.getSquare(x, y);
 				piece = this.getPiece(pt.x, pt.y);
-				if (!store.findRecord('key', piece.key)) {
+				if (store.findExact('key', piece.key) == -1) {
 					store.add(piece);
 				}
 			}
@@ -67,6 +71,15 @@ Ext.define('Pente.controller.Controller', {
 		onStoreLoaded: function () {
 		},
 
+		onStoreBulkRemove: function (store, records, indexes, isMove, eOpts) {
+			var view = this.getPenteView();
+			var len = records.length;
+			for (var i = 0; i < len; ++i) {
+				var item = records[i];
+				view.removePiece({x: item.data.x, y: item.data.y});
+			}
+		},
+
 		addToView: function (records) {
 			var view = this.getPenteView();
 			var len = records.length;
@@ -74,6 +87,11 @@ Ext.define('Pente.controller.Controller', {
 				var item = records[i];
 				view.drawPiece({x: item.data.x, y: item.data.y});
 			}
+		},
+
+		onNewGame: function () {
+			var store = this.getPenteStoreStoreStore();
+			store.removeAll();
 		}
 	}
 )

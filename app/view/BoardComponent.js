@@ -31,7 +31,7 @@ Ext.define('Pente.view.BoardComponent', {
 				type: 'path',
 				path: path,
 				stroke: '#c0c0c0',
-				'stroke-width':.5
+				'stroke-width': .5
 			};
 			this.items.push(item);
 			ptStart.x += cx;
@@ -46,7 +46,7 @@ Ext.define('Pente.view.BoardComponent', {
 				type: 'path',
 				path: path,
 				stroke: '#c0c0c0',
-				'stroke-width':.5
+				'stroke-width': .5
 			};
 			this.items.push(item);
 			ptStart.y += cy;
@@ -57,25 +57,46 @@ Ext.define('Pente.view.BoardComponent', {
 		this.height = size.height;
 		this.width = size.width;
 
+		this.pieceGroup = Ext.create('Ext.draw.CompositeSprite', { surface: this });
+
 		this.callParent(arguments);
 	},
 
 	drawPiece: function (pt) {
 		var bt = Pente.lib.Board;
-		var mapped = bt.mapPoint(pt.x, pt.y);
-
 		var r = bt.cxPiece / 2;
-		var x = mapped.x + (bt.cxPiece / 2);
-		var y = mapped.y + (bt.cyPiece / 2);
+		var ptOrigin = this.getOrigin(pt);
 
-		this.surface.add({
+		var sprite = this.surface.add({
 			type: 'circle',
 			fill: '#008000',
 			stroke: '#004000',
 			'stroke-width': 1,
 			opacity: 1,
 			radius: r,
-			x: x,
-			y: y}).show(true);
+			x: ptOrigin.x,
+			y: ptOrigin.y});
+
+		var key = bt.key(pt.x, pt.y);
+		this.pieceGroup.add(key, sprite);
+		sprite.show(true);
+	},
+
+	removePiece: function (pt) {
+		var bt = Pente.lib.Board;
+		var key = bt.key(pt.x, pt.y);
+		var sprite = this.pieceGroup.get(key);
+		if (sprite) {
+			this.pieceGroup.remove(sprite);
+			this.surface.remove(sprite, true);
+		}
+	},
+
+	getOrigin: function (pt) {
+		var bt = Pente.lib.Board;
+		var mapped = bt.mapPoint(pt.x, pt.y);
+		var x = mapped.x + (bt.cxPiece / 2);
+		var y = mapped.y + (bt.cyPiece / 2);
+		return {x: x, y: y};
 	}
 });
