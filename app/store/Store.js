@@ -1,6 +1,7 @@
 Ext.define('Pente.store.Store', {
 	extend: 'Ext.data.Store',
 	model: 'Pente.model.Piece',
+	autoSync: true,
 	proxy: {
 		type: 'sessionstorage',
 		id: 'PenteProxyKey',

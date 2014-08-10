@@ -12,6 +12,9 @@ Ext.define('Pente.controller.Controller', {
 		],
 
 		init: function () {
+			var store = this.getPenteStoreStoreStore();
+			store.on("load", this.onStoreLoad, this);
+			store.on("add", this.onStoreAdd, this);
 			this.control({
 				'pente-view': {
 					render: this.onViewRendered
@@ -34,9 +37,9 @@ Ext.define('Pente.controller.Controller', {
 			if (bOnBoard) {
 				pt = bt.getSquare(x, y);
 				piece = this.getPiece(pt.x, pt.y);
-				store.add(piece);
-				store.sync();
-				view.drawPiece(pt);
+				if (!store.findRecord('key', piece.key)) {
+					store.add(piece);
+				}
 			}
 		},
 
@@ -53,12 +56,25 @@ Ext.define('Pente.controller.Controller', {
 			});
 		},
 
+		onStoreLoad: function (store, records, successful, eOpts) {
+			this.addToView(records);
+		},
+
+		onStoreAdd: function (store, records, index, eOpts) {
+			this.addToView(records);
+		},
+
 		onStoreLoaded: function () {
-			view = this.getPenteView();
-			var store = this.getPenteStoreStoreStore();
-			store.data.each(function (item) {
+		},
+
+		addToView: function (records) {
+			var view = this.getPenteView();
+			var len = records.length;
+			for (var i = 0; i < len; ++i) {
+				var item = records[i];
 				view.drawPiece({x: item.data.x, y: item.data.y});
-			});
+			}
 		}
 	}
-);
+)
+;
