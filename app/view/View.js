@@ -15,9 +15,9 @@ Ext.define('Pente.view.View', {
 		this.callParent(arguments);
 	},
 
-	drawPiece: function (pt) {
+	drawPiece: function (piece) {
 		var bc = this.query('board-component')[0];
-		bc.drawPiece(pt);
+		bc.drawPiece(piece);
 	},
 
 	removePiece: function (pt) {

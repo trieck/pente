@@ -62,22 +62,23 @@ Ext.define('Pente.view.BoardComponent', {
 		this.callParent(arguments);
 	},
 
-	drawPiece: function (pt) {
+	drawPiece: function (piece) {
 		var bt = Pente.lib.Board;
 		var r = bt.cxPiece / 2;
-		var ptOrigin = this.getOrigin(pt);
+		var ptOrigin = this.getOrigin({x: piece.data.x, y: piece.data.y});
+		var color = piece.data.who == 0 ? '#008000' : '#800000';
 
 		var sprite = this.surface.add({
 			type: 'circle',
-			fill: '#008000',
-			stroke: '#004000',
+			fill: color,
+			stroke: '#000000',
 			'stroke-width': 1,
 			opacity: 1,
 			radius: r,
 			x: ptOrigin.x,
 			y: ptOrigin.y});
 
-		var key = bt.key(pt.x, pt.y);
+		var key = bt.key(piece.data.x, piece.data.y);
 		this.pieceGroup.add(key, sprite);
 		sprite.show(true);
 	},
