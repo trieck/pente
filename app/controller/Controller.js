@@ -3,7 +3,7 @@ Ext.define('Pente.controller.Controller', {
 		models: [ 'Pente.model.Piece' ],
 		stores: [ 'Pente.store.PieceStore', 'Pente.store.TurnStore' ],
 		views: [ 'Pente.view.View' ],
-
+		uses: [ 'Pente.lib.Game'],
 		refs: [
 			{
 				selector: 'pente-view',
@@ -24,6 +24,12 @@ Ext.define('Pente.controller.Controller', {
 					click: this.onNewGame
 				}
 			});
+		},
+
+		onLaunch: function () {
+			this.game = Ext.create('Pente.lib.Game');
+			var mask = Ext.getCmp('load-indicator');
+			if (mask) mask.hide();
 		},
 
 		onViewRendered: function () {

@@ -1,7 +1,7 @@
 Ext.define('Pente.view.BoardComponent', {
 	extend: 'Ext.draw.Component',
 	alias: 'widget.board-component',
-	requires: [ 'Pente.lib.Board' ],
+	uses: [ 'Pente.lib.Board' ],
 	viewBox: false,
 	items: [],
 	initComponent: function () {

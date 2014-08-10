@@ -16,6 +16,9 @@ Ext.define('Pente.lib.Board', {
 		height: function () {
 			return this.squareSize * this.cySquares;
 		},
+		entries: function() {
+			return this.boardSize * this.boardSize;
+		},
 		dimensions: function () {
 			var right = this.width();
 			var bottom = this.height();
