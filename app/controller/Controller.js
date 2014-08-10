@@ -1,7 +1,7 @@
 Ext.define('Pente.controller.Controller', {
 		extend: 'Ext.app.Controller',
 		models: [ 'Pente.model.Piece' ],
-		stores: [ 'Pente.store.Store' ],
+		stores: [ 'Pente.store.PieceStore' ],
 		views: [ 'Pente.view.View' ],
 
 		refs: [
@@ -12,7 +12,7 @@ Ext.define('Pente.controller.Controller', {
 		],
 
 		init: function () {
-			var store = this.getPenteStoreStoreStore();
+			var store = this.getPenteStorePieceStoreStore();
 			store.on("load", this.onStoreLoad, this);
 			store.on("add", this.onStoreAdd, this);
 			store.on("bulkremove", this.onStoreBulkRemove, this);
@@ -34,7 +34,7 @@ Ext.define('Pente.controller.Controller', {
 		onClicked: function (e) {
 			var pt, piece, event = e.browserEvent;
 			var bt = Pente.lib.Board;
-			var store = this.getPenteStoreStoreStore();
+			var store = this.getPenteStorePieceStoreStore();
 			var x = event.offsetX ? event.offsetX : event.layerX;
 			var y = event.offsetY ? event.offsetY : event.layerY;
 			var bOnBoard = bt.ptOnBoard(x, y);
@@ -53,7 +53,7 @@ Ext.define('Pente.controller.Controller', {
 		},
 
 		onLaunch: function () {
-			var store = this.getPenteStoreStoreStore();
+			var store = this.getPenteStorePieceStoreStore();
 			store.load({
 				callback: this.onStoreLoaded,
 				scope: this
@@ -90,7 +90,7 @@ Ext.define('Pente.controller.Controller', {
 		},
 
 		onNewGame: function () {
-			var store = this.getPenteStoreStoreStore();
+			var store = this.getPenteStorePieceStoreStore();
 			store.removeAll();
 		}
 	}
