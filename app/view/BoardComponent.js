@@ -11,6 +11,8 @@ Ext.define('Pente.view.BoardComponent', {
 		var cy = bt.squareSize;
 		var x = bt.cxBorder;
 		var y = bt.cyBorder;
+		var ptStart, ptEnd;
+		var path, item;
 
 		this.items.push({
 			type: 'rect',
@@ -23,15 +25,15 @@ Ext.define('Pente.view.BoardComponent', {
 		});
 
 		// draw vertical lines
-		var ptStart = Ext.create('Ext.util.Point', x + cx, y);
+		ptStart = Ext.create('Ext.util.Point', x + cx, y);
 		while (ptStart.x < dims.right) {
-			var ptEnd = Ext.create('Ext.util.Point', ptStart.x, dims.bottom + y);
-			var path = Ext.String.format("M{0} {1} L{2} {3}", ptStart.x, ptStart.y, ptEnd.x, ptEnd.y);
-			var item = {
+			ptEnd = Ext.create('Ext.util.Point', ptStart.x, dims.bottom + y);
+			path = Ext.String.format("M{0} {1} L{2} {3}", ptStart.x, ptStart.y, ptEnd.x, ptEnd.y);
+			item = {
 				type: 'path',
 				path: path,
 				stroke: '#c0c0c0',
-				'stroke-width': .5
+				'stroke-width': 0.5
 			};
 			this.items.push(item);
 			ptStart.x += cx;
@@ -46,7 +48,7 @@ Ext.define('Pente.view.BoardComponent', {
 				type: 'path',
 				path: path,
 				stroke: '#c0c0c0',
-				'stroke-width': .5
+				'stroke-width': 0.5
 			};
 			this.items.push(item);
 			ptStart.y += cy;
@@ -66,7 +68,7 @@ Ext.define('Pente.view.BoardComponent', {
 		var bt = Pente.lib.Board;
 		var r = bt.cxPiece / 2;
 		var ptOrigin = this.getOrigin({x: piece.data.x, y: piece.data.y});
-		var color = piece.data.who == 0 ? '#008000' : '#800000';
+		var color = piece.data.who === 0 ? '#008000' : '#800000';
 
 		var sprite = this.surface.add({
 			type: 'circle',

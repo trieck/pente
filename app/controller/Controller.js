@@ -3,12 +3,9 @@ Ext.define('Pente.controller.Controller', {
 		models: [ 'Pente.model.Piece' ],
 		stores: [ 'Pente.store.PieceStore', 'Pente.store.TurnStore' ],
 		views: [ 'Pente.view.View' ],
-		uses: [ 'Pente.lib.Game'],
+		uses: [ 'Pente.lib.Machine'],
 		refs: [
-			{
-				selector: 'pente-view',
-				ref: 'penteView'
-			}
+			{ selector: 'pente-view', ref: 'penteView' }
 		],
 
 		init: function () {
@@ -27,7 +24,7 @@ Ext.define('Pente.controller.Controller', {
 		},
 
 		onLaunch: function () {
-			this.game = Ext.create('Pente.lib.Game');
+			this.machine = Ext.create('Pente.lib.Machine');
 			var mask = Ext.getCmp('load-indicator');
 			if (mask) mask.hide();
 		},
@@ -45,7 +42,7 @@ Ext.define('Pente.controller.Controller', {
 			var bOnBoard = bt.ptOnBoard(x, y);
 			if (bOnBoard) {
 				if (this.addPiece(x, y)) {
-					this.changeTurns();
+					this.machineMove();
 				}
 			}
 		},
@@ -57,9 +54,20 @@ Ext.define('Pente.controller.Controller', {
 			var piece = this.getPiece(pt.x, pt.y);
 			if (store.findExact('key', piece.key) == -1) {
 				store.add(piece);
+				this.changeTurns();
 				return true;
 			}
 			return false;
+		},
+
+		machineMove: function () {
+			var store = this.getPenteStorePieceStoreStore();
+			var pt = {};
+			if (this.machine.move(pt)) {
+				var piece = this.getPiece(pt.x, pt.y);
+				store.add(piece);
+				this.changeTurns();
+			}
 		},
 
 		changeTurns: function () {

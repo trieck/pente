@@ -1,0 +1,15 @@
+{
+	"browser": true,
+	"devel": true,
+	"undef": true,
+	"eqeqeq": false,
+	"eqnull": true,
+	"scripturl": true,
+	"laxbreak": true,
+	"evil": true,
+	"predef": [
+		"Ext",
+		"Pente",
+		"$"
+	]
+}
