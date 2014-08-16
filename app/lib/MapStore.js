@@ -70,7 +70,7 @@ Ext.define('Pente.lib.MapStore', {
 
 	get: function (key) {
 		var me = this;
-		return me.data.get(key);
+		return me.data.map[key];
 	},
 
 	/**
