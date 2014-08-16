@@ -25,8 +25,6 @@ Ext.define('Pente.controller.Controller', {
 
 		onLaunch: function () {
 			this.machine = Ext.create('Pente.lib.Machine');
-			var mask = Ext.getCmp('load-indicator');
-			if (mask) mask.hide();
 		},
 
 		onViewRendered: function () {
@@ -52,7 +50,7 @@ Ext.define('Pente.controller.Controller', {
 			var store = this.getPenteStorePieceStoreStore();
 			var pt = bt.getSquare(x, y);
 			var piece = this.getPiece(pt.x, pt.y);
-			if (store.findExact('key', piece.key) == -1) {
+			if (!store.get(piece.key)) {
 				store.add(piece);
 				this.changeTurns();
 				return true;

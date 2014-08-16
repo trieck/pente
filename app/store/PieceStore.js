@@ -1,5 +1,5 @@
 Ext.define('Pente.store.PieceStore', {
-	extend: 'Ext.data.Store',
+	extend: 'Pente.lib.MapStore',
 	model: 'Pente.model.Piece',
 	autoSync: true,
 	autoLoad: true,
@@ -10,6 +10,7 @@ Ext.define('Pente.store.PieceStore', {
 			model: 'Pente.model.Piece'
 		}
 	},
+
 	removeAll: function () {
 		this.callParent(arguments);
 		this.proxy.clear();
