@@ -39,32 +39,49 @@ Ext.define('Pente.controller.Controller', {
             var y = event.offsetY ? event.offsetY : event.layerY;
             var bOnBoard = bt.ptOnBoard(x, y);
             if (bOnBoard) {
-                if (this.addPiece(x, y)) {
+                if (this.addPoint(x, y)) {
                     this.machineMove();
                 }
             }
         },
 
-        addPiece: function (x, y) {
+        addPoint: function (x, y) {
             var bt = Pente.lib.Board;
             var store = this.getPenteStorePieceStoreStore();
             var pt = bt.getSquare(x, y);
             var piece = this.getPiece(pt.x, pt.y);
             if (!store.get(piece.key)) {
-                store.add(piece);
-                this.changeTurns();
+                this.addPiece(piece);
                 return true;
             }
             return false;
         },
 
         machineMove: function () {
-            var store = this.getPenteStorePieceStoreStore();
             var pt = this.machine.move(), piece;
             if (pt) {
                 piece = this.getPiece(pt.x, pt.y);
-                store.add(piece);
-                this.changeTurns();
+                this.addPiece(piece);
+            }
+        },
+
+        addPiece: function (piece) {
+            var store = this.getPenteStorePieceStoreStore();
+            store.add(piece);
+            this.changeTurns();
+            this.checkWinner();
+        },
+
+        checkWinner: function () {
+            var pieceT = Pente.model.Piece;
+            var winner = this.machine.winner();
+            var sWinner;
+
+            if (winner) {
+                sWinner = winner === pieceT.PT_PLAYER_ONE ? 'Player One' : 'Player Two';
+                Ext.MessageBox.alert('Game Over!', sWinner + ' Wins!', function () {
+                    this.onNewGame();
+                }, this);
             }
         },
 

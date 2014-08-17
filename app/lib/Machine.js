@@ -379,5 +379,26 @@ Ext.define('Pente.lib.Machine', {
         }
 
         return maxV;
+    },
+
+    winner: function () {
+        var i, j, nlen = this.vectors.length;
+        var pieceT = Pente.model.Piece;
+        var pt, who;
+        var onecount, twocount;
+
+        for (i = 0; i < nlen; ++i) {
+            for (j = 0, onecount = 0, twocount = 0; j < this.self.VSIZE; ++j) {
+                pt = this.vectors[i][j];
+                who = this.pieceStore.who(pt);
+                if (!who) continue;
+                if (who === pieceT.PT_PLAYER_ONE) onecount++;
+                if (who === pieceT.PT_PLAYER_TWO) twocount++;
+            }
+            if (onecount === this.self.VSIZE)
+                return pieceT.PT_PLAYER_ONE;
+            if (twocount === this.self.VSIZE)
+                return pieceT.PT_PLAYER_TWO;
+        }
     }
 });
