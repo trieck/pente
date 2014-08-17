@@ -305,7 +305,9 @@ Ext.define('Pente.lib.Machine', {
                         maxP = { x: pt.x, y: pt.y };
                     }
                 }
-            } else if (i > 0 && this.pieceStore.who(pt) === pieceT.PT_PLAYER_TWO) {
+            }
+
+            if (i > 0 && this.pieceStore.who(pt) === pieceT.PT_PLAYER_TWO) {
                 pt = v[i - 1];
                 if (!this.pieceStore.who(pt)) {
                     if ((weight = this.weightPoint(pt)) > maxWeight) {
