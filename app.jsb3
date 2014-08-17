@@ -1,0 +1,101 @@
+{
+    "projectName": "Pente for ExtJS",
+    "licenseText": "Copyright(c) 2014 Rieck Enterprises",
+    "builds": [
+        {
+            "name": "All Classes",
+            "target": "all-classes.js",
+            "options": {
+                "debug": true
+            },
+            "files": [
+                {
+                    "clsName": "Pente.model.Piece",
+                    "name": "Piece.js",
+                    "path": "app/model/"
+                },
+                {
+                    "clsName": "Pente.view.BoardComponent",
+                    "name": "BoardComponent.js",
+                    "path": "app/view/"
+                },
+                {
+                    "clsName": "Pente.lib.MapStore",
+                    "name": "MapStore.js",
+                    "path": "app/lib/"
+                },
+                {
+                    "clsName": "Pente.model.Turn",
+                    "name": "Turn.js",
+                    "path": "app/model/"
+                },
+                {
+                    "clsName": "Pente.view.View",
+                    "name": "View.js",
+                    "path": "app/view/"
+                },
+                {
+                    "clsName": "Pente.store.PieceStore",
+                    "name": "PieceStore.js",
+                    "path": "app/store/"
+                },
+                {
+                    "clsName": "Pente.store.TurnStore",
+                    "name": "TurnStore.js",
+                    "path": "app/store/"
+                },
+                {
+                    "clsName": "Pente.controller.Controller",
+                    "name": "Controller.js",
+                    "path": "app/controller/"
+                },
+                {
+                    "clsName": "Pente.lib.Board",
+                    "name": "Board.js",
+                    "path": "app/lib/"
+                },
+                {
+                    "clsName": "Pente.lib.Machine",
+                    "name": "Machine.js",
+                    "path": "app/lib/"
+                },
+                {
+                    "clsName": "Pente.lib.Toolbar",
+                    "name": "Toolbar.js",
+                    "path": "app/lib/"
+                },
+                {
+                    "clsName": "Pente.lib.StatusBar",
+                    "name": "StatusBar.js",
+                    "path": "app/lib/"
+                },
+                {
+                    "clsName": "Pente.lib.Statuspanel",
+                    "name": "Statuspanel.js",
+                    "path": "app/lib/"
+                },
+                {
+                    "clsName": "Pente.lib.Frame",
+                    "name": "Frame.js",
+                    "path": "app/lib/"
+                }
+            ]
+        },
+        {
+            "name": "Application - Production",
+            "target": "app-all.js",
+            "compress": true,
+            "files": [
+                {
+                    "path": "",
+                    "name": "all-classes.js"
+                },
+                {
+                    "path": "",
+                    "name": "app.js"
+                }
+            ]
+        }
+    ],
+    "resources": []
+}
