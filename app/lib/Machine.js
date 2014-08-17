@@ -102,42 +102,44 @@ Ext.define('Pente.lib.Machine', {
 
     /*
      * Determine square where we must block
-     * where the vector contains VSIZE-1 PT_PLAYER_ONE pieces and one empty
      */
     mustBlock: function () {
-        var b, i, j, who, p, q, maxP;
-        var weight, maxWeight = this.self.MIN_WEIGHT, nlen = this.vectors.length;
-        var onecount, ecount;
+        var pt;
+
+        if ((pt = this.matchBlock(4, 1)))
+            return pt;
+
+        pt = this.matchBlock(3, 2);
+
+        return pt;
+    },
+
+    matchBlock: function (player, empty) {
+        var weight = 0, maxWeight = this.self.MIN_WEIGHT, nlen = this.vectors.length;
+        var i, j, p, who;
+        var candidates = [], clen;
         var pieceT = Pente.model.Piece;
+        var p1s, empties, maxP;
 
         for (i = 0; i < nlen; ++i) {
-            for (j = 0, onecount = 0, ecount = 0; j < this.self.VSIZE; ++j) {
+            candidates = [];
+            for (j = 0, p1s = 0, empties = 0; j < this.self.VSIZE; ++j) {
                 p = this.vectors[i][j];
                 who = this.pieceStore.who(p);
                 if (!who) {
-                    ecount++;
-                    b = p;
+                    candidates.push(p);
+                    empties++;
                 }
-                else if (who === pieceT.PT_PLAYER_ONE) onecount++;
-            }
-
-            if (onecount === this.self.VSIZE - 1 && ecount == 1) { // must block, b contains the square to block
-                weight = this.weightPoint(b);
-                if (weight > maxWeight) {
-                    maxP = { x: b.x, y: b.y };
-                    maxWeight = weight;
+                else if (who === pieceT.PT_PLAYER_ONE) {
+                    p1s++;
                 }
             }
-
-            // block contiguous with open ends
-            if (onecount === this.self.VSIZE - 2 && ecount == 2) {
-                p = this.vectors[i][0];
-                q = this.vectors[i][this.self.VSIZE - 1];
-
-                if (!this.pieceStore.who(p) && !this.pieceStore.who(q)) {
-                    weight = this.weightPoint(b);
+            if (p1s === player && empties === empty) {
+                clen = candidates.length;
+                for (j = 0; j < clen; ++j) {
+                    weight = this.weightPoint(candidates[j]);
                     if (weight > maxWeight) {
-                        maxP = { x: b.x, y: b.y };
+                        maxP = { x: candidates[j].x, y: candidates[j].y };
                         maxWeight = weight;
                     }
                 }
@@ -287,7 +289,7 @@ Ext.define('Pente.lib.Machine', {
         var i, pt, maxP;
         var bt = Pente.lib.Board;
         var pieceT = Pente.model.Piece;
-        var weight, maxWeight = 0;
+        var weight, maxWeight = this.self.MIN_WEIGHT;
 
         if (this.center(v)) {
             pt = { x: Math.floor(this.self.CENTER / bt.boardSize), y: this.self.CENTER % bt.boardSize };
@@ -358,7 +360,7 @@ Ext.define('Pente.lib.Machine', {
      */
     maxOpponentV: function () {
         var pieceT = Pente.model.Piece;
-        var i, j, who, maxV, weight, maxWeight, nlen = this.vectors.length;
+        var i, j, who, maxV, weight, maxWeight = this.self.MIN_WEIGHT, nlen = this.vectors.length;
 
         for (i = 0; i < nlen; ++i) {
             for (j = 0, weight = 0; j < this.self.VSIZE; ++j) {
