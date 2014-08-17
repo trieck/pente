@@ -51,8 +51,7 @@ Ext.define('Pente.controller.Controller', {
             var pt = bt.getSquare(x, y);
             var piece = this.getPiece(pt.x, pt.y);
             if (!store.get(piece.key)) {
-                this.addPiece(piece);
-                return true;
+                return this.addPiece(piece);
             }
             return false;
         },
@@ -69,7 +68,7 @@ Ext.define('Pente.controller.Controller', {
             var store = this.getPenteStorePieceStoreStore();
             store.add(piece);
             this.changeTurns();
-            this.checkWinner();
+            return !this.checkWinner();
         },
 
         checkWinner: function () {
@@ -83,6 +82,7 @@ Ext.define('Pente.controller.Controller', {
                     this.onNewGame();
                 }, this);
             }
+            return winner;
         },
 
         changeTurns: function () {
