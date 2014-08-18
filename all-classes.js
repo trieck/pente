@@ -33,6 +33,7 @@ Ext.define('Pente.view.BoardComponent', {
 
         this.items.push({
             type: 'rect',
+            id: 'pente-board',
             width: bt.width(),
             height: bt.height(),
             fill: '#fff0d4',
@@ -119,6 +120,13 @@ Ext.define('Pente.view.BoardComponent', {
         var x = mapped.x + (bt.cxPiece / 2);
         var y = mapped.y + (bt.cyPiece / 2);
         return {x: x, y: y};
+    },
+
+    setBoardColor: function (color) {
+        Ext.fly('pente-board').setStyle('fill', color);
+    },
+
+    setGridColor: function (color) {
     }
 });
 /**
@@ -412,6 +420,20 @@ Ext.define('Pente.view.View', {
     removePiece: function (pt) {
         var bc = this.query('board-component')[0];
         bc.removePiece(pt);
+    },
+
+    setColor: function (color) {
+        this.setBodyStyle('background-color', color);
+    },
+
+    setBoardColor: function (color) {
+        var bc = this.query('board-component')[0];
+        bc.setBoardColor(color);
+    },
+
+    setGridColor: function (color) {
+        var bc = this.query('board-component')[0];
+        bc.setGridColor(color);
     }
 });
 Ext.define('Pente.store.PieceStore', {
@@ -507,6 +529,15 @@ Ext.define('Pente.controller.Controller', {
                 },
                 'pente-toolbar > button#newButton': {
                     click: this.onNewGame
+                },
+                '#table-picker': {
+                    select: this.onTableColor
+                },
+                '#board-picker': {
+                    select: this.onBoardColor
+                },
+                '#grid-picker': {
+                    select: this.onGridColor
                 }
             });
         },
@@ -615,10 +646,25 @@ Ext.define('Pente.controller.Controller', {
 
             store = this.getPenteStoreTurnStoreStore();
             store.removeAll();
+        },
+
+        onTableColor: function (picker, color, eOpts) {
+            var view = this.getPenteView();
+            view.setColor(color);
+        },
+
+        onBoardColor: function (picker, color, eOpts) {
+            var view = this.getPenteView();
+            view.setBoardColor(color);
+        },
+
+        onGridColor: function (picker, color, eOpts) {
+            var view = this.getPenteView();
+            view.setGridColor(color);
         }
     }
-)
-;
+);
+
 
 Ext.define('Pente.lib.Board', {
     statics: {
@@ -1095,19 +1141,94 @@ Ext.define('Pente.lib.Toolbar', {
         {
             xtype: 'button',
             tooltip: { text: 'Play a new game', title: 'New Game'},
+            text: 'New Game',
             iconCls: 'new',
+            focusCls: '',
             id: 'newButton'
         },
         {
             xtype: 'button',
             tooltip: { text: 'Change game settings', title: 'Settings' },
+            text: 'Settings',
             iconCls: 'gear',
-            id: 'settingsButton'
+            focusCls: '',
+            id: 'settingsButton',
+            menu: {
+                items: [
+                    {
+                        text: 'Table Color',
+                        iconCls: 'colors',
+                        menu: {
+                            plain: true,
+                            items: [
+                                {
+                                    xtype: 'colorpicker',
+                                    id: 'table-picker'
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        text: 'Board Color',
+                        iconCls: 'colors',
+                        menu: {
+                            plain: true,
+                            items: [
+                                {
+                                    xtype: 'colorpicker',
+                                    id: 'board-picker'
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        text: 'Grid Color',
+                        iconCls: 'colors',
+                        menu: {
+                            plain: true,
+                            items: [
+                                {
+                                    xtype: 'colorpicker',
+                                    id: 'grid-picker'
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        text: 'Player One Color',
+                        iconCls: 'colors',
+                        menu: {
+                            plain: true,
+                            items: [
+                                {
+                                    xtype: 'colorpicker',
+                                    id: 'player-one-picker'
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        text: 'Player Two Color',
+                        iconCls: 'colors',
+                        menu: {
+                            plain: true,
+                            items: [
+                                {
+                                    xtype: 'colorpicker',
+                                    id: 'player-two-picker'
+                                }
+                            ]
+                        }
+                    }
+                ]
+            }
         },
         {
             xtype: 'button',
             tooltip: { text: 'About Pente for ExtJS', title: 'About' },
+            text: 'About Pente',
             iconCls: 'help',
+            focusCls: '',
             id: 'helpButton'
         }
     ],
@@ -1277,6 +1398,7 @@ Ext.define('Pente.lib.StatusBar', {
 Ext.define('Pente.lib.Statuspanel', {
     extend: 'Ext.panel.Panel',
     alias: 'widget.pente-statuspanel',
+    require: 'Ext.lib.StatusBar',
 
     bbar: Ext.create('Pente.lib.StatusBar', {
         id: 'pente-status',
@@ -1306,7 +1428,6 @@ Ext.define('Pente.lib.Frame', {
     ],
     bbar: { xtype: 'pente-statuspanel' },
     resizable: false
-})
-;
+});
 
 
