@@ -1,6 +1,7 @@
 Ext.define('Pente.lib.Statuspanel', {
     extend: 'Ext.panel.Panel',
     alias: 'widget.pente-statuspanel',
+    require: 'Ext.lib.StatusBar',
 
     bbar: Ext.create('Pente.lib.StatusBar', {
         id: 'pente-status',

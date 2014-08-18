@@ -16,6 +16,7 @@ Ext.define('Pente.view.BoardComponent', {
 
         this.items.push({
             type: 'rect',
+            id: 'pente-board',
             width: bt.width(),
             height: bt.height(),
             fill: '#fff0d4',
@@ -102,5 +103,12 @@ Ext.define('Pente.view.BoardComponent', {
         var x = mapped.x + (bt.cxPiece / 2);
         var y = mapped.y + (bt.cyPiece / 2);
         return {x: x, y: y};
+    },
+
+    setBoardColor: function (color) {
+        Ext.fly('pente-board').setStyle('fill', color);
+    },
+
+    setGridColor: function (color) {
     }
 });

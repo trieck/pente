@@ -14,5 +14,4 @@ Ext.define('Pente.lib.Frame', {
     ],
     bbar: { xtype: 'pente-statuspanel' },
     resizable: false
-})
-;
+});

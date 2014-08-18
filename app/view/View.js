@@ -23,5 +23,19 @@ Ext.define('Pente.view.View', {
     removePiece: function (pt) {
         var bc = this.query('board-component')[0];
         bc.removePiece(pt);
+    },
+
+    setColor: function (color) {
+        this.setBodyStyle('background-color', color);
+    },
+
+    setBoardColor: function (color) {
+        var bc = this.query('board-component')[0];
+        bc.setBoardColor(color);
+    },
+
+    setGridColor: function (color) {
+        var bc = this.query('board-component')[0];
+        bc.setGridColor(color);
     }
 });

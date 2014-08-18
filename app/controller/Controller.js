@@ -19,6 +19,15 @@ Ext.define('Pente.controller.Controller', {
                 },
                 'pente-toolbar > button#newButton': {
                     click: this.onNewGame
+                },
+                '#table-picker': {
+                    select: this.onTableColor
+                },
+                '#board-picker': {
+                    select: this.onBoardColor
+                },
+                '#grid-picker': {
+                    select: this.onGridColor
                 }
             });
         },
@@ -127,7 +136,22 @@ Ext.define('Pente.controller.Controller', {
 
             store = this.getPenteStoreTurnStoreStore();
             store.removeAll();
+        },
+
+        onTableColor: function (picker, color, eOpts) {
+            var view = this.getPenteView();
+            view.setColor(color);
+        },
+
+        onBoardColor: function (picker, color, eOpts) {
+            var view = this.getPenteView();
+            view.setBoardColor(color);
+        },
+
+        onGridColor: function (picker, color, eOpts) {
+            var view = this.getPenteView();
+            view.setGridColor(color);
         }
     }
-)
-;
+);
+

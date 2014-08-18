@@ -5,19 +5,94 @@ Ext.define('Pente.lib.Toolbar', {
         {
             xtype: 'button',
             tooltip: { text: 'Play a new game', title: 'New Game'},
+            text: 'New Game',
             iconCls: 'new',
+            focusCls: '',
             id: 'newButton'
         },
         {
             xtype: 'button',
             tooltip: { text: 'Change game settings', title: 'Settings' },
+            text: 'Settings',
             iconCls: 'gear',
-            id: 'settingsButton'
+            focusCls: '',
+            id: 'settingsButton',
+            menu: {
+                items: [
+                    {
+                        text: 'Table Color',
+                        iconCls: 'colors',
+                        menu: {
+                            plain: true,
+                            items: [
+                                {
+                                    xtype: 'colorpicker',
+                                    id: 'table-picker'
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        text: 'Board Color',
+                        iconCls: 'colors',
+                        menu: {
+                            plain: true,
+                            items: [
+                                {
+                                    xtype: 'colorpicker',
+                                    id: 'board-picker'
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        text: 'Grid Color',
+                        iconCls: 'colors',
+                        menu: {
+                            plain: true,
+                            items: [
+                                {
+                                    xtype: 'colorpicker',
+                                    id: 'grid-picker'
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        text: 'Player One Color',
+                        iconCls: 'colors',
+                        menu: {
+                            plain: true,
+                            items: [
+                                {
+                                    xtype: 'colorpicker',
+                                    id: 'player-one-picker'
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        text: 'Player Two Color',
+                        iconCls: 'colors',
+                        menu: {
+                            plain: true,
+                            items: [
+                                {
+                                    xtype: 'colorpicker',
+                                    id: 'player-two-picker'
+                                }
+                            ]
+                        }
+                    }
+                ]
+            }
         },
         {
             xtype: 'button',
             tooltip: { text: 'About Pente for ExtJS', title: 'About' },
+            text: 'About Pente',
             iconCls: 'help',
+            focusCls: '',
             id: 'helpButton'
         }
     ],
