@@ -127,6 +127,11 @@ Ext.define('Pente.view.BoardComponent', {
     },
 
     setGridColor: function (color) {
+        var items = Ext.query('path');
+        var nlength = items.length;
+        for (var i = 0; i < nlength; ++i) {
+            Ext.fly(items[i]).setStyle('stroke', color);
+        }
     }
 });
 /**
