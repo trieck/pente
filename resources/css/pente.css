@@ -13,3 +13,23 @@
 .new {
     background-image: url(../images/new.png) !important;
 }
+
+.x-color-picker {
+    width: 240px;
+    height: 240px;
+    background-color: white;
+    border-color: white;
+    border-width: 0;
+    border-style: solid;
+}
+
+.x-color-picker-item {
+    width: 15px;
+    height: 15px;
+    border-width: 0px;
+    border-color: white;
+    border-style: solid;
+    background-color: white;
+    cursor: pointer;
+    padding: 2px;
+}

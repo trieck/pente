@@ -60,11 +60,6 @@
                     "path": "app/lib/"
                 },
                 {
-                    "clsName": "Pente.lib.Toolbar",
-                    "name": "Toolbar.js",
-                    "path": "app/lib/"
-                },
-                {
                     "clsName": "Pente.lib.StatusBar",
                     "name": "StatusBar.js",
                     "path": "app/lib/"
@@ -72,6 +67,16 @@
                 {
                     "clsName": "Pente.lib.Statuspanel",
                     "name": "Statuspanel.js",
+                    "path": "app/lib/"
+                },
+                {
+                    "clsName": "Pente.lib.ColorPicker",
+                    "name": "ColorPicker.js",
+                    "path": "app/lib/"
+                },
+                {
+                    "clsName": "Pente.lib.Toolbar",
+                    "name": "Toolbar.js",
                     "path": "app/lib/"
                 },
                 {

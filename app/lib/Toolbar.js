@@ -1,6 +1,7 @@
 Ext.define('Pente.lib.Toolbar', {
     extend: 'Ext.Toolbar',
     alias: 'widget.pente-toolbar',
+    requires: [ 'Pente.lib.ColorPicker' ],
     items: [
         {
             xtype: 'button',
@@ -26,7 +27,7 @@ Ext.define('Pente.lib.Toolbar', {
                             plain: true,
                             items: [
                                 {
-                                    xtype: 'colorpicker',
+                                    xtype: 'pente-colorpicker',
                                     id: 'table-picker'
                                 }
                             ]
@@ -39,7 +40,7 @@ Ext.define('Pente.lib.Toolbar', {
                             plain: true,
                             items: [
                                 {
-                                    xtype: 'colorpicker',
+                                    xtype: 'pente-colorpicker',
                                     id: 'board-picker'
                                 }
                             ]
@@ -52,7 +53,7 @@ Ext.define('Pente.lib.Toolbar', {
                             plain: true,
                             items: [
                                 {
-                                    xtype: 'colorpicker',
+                                    xtype: 'pente-colorpicker',
                                     id: 'grid-picker'
                                 }
                             ]
@@ -65,7 +66,7 @@ Ext.define('Pente.lib.Toolbar', {
                             plain: true,
                             items: [
                                 {
-                                    xtype: 'colorpicker',
+                                    xtype: 'pente-colorpicker',
                                     id: 'player-one-picker'
                                 }
                             ]
@@ -78,7 +79,7 @@ Ext.define('Pente.lib.Toolbar', {
                             plain: true,
                             items: [
                                 {
-                                    xtype: 'colorpicker',
+                                    xtype: 'pente-colorpicker',
                                     id: 'player-two-picker'
                                 }
                             ]
