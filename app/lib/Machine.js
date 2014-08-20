@@ -13,7 +13,7 @@ Ext.define('Pente.lib.Machine', {
 
     constructor: function () {
         this.pieceStore = Ext.getStore('Pente.store.PieceStore');
-        this.turnStore = Ext.getStore('Pente.store.TurnStore');
+        this.boardStateStore = Ext.getStore('Pente.store.BoardStateStore');
         this.generate();
     },
 
@@ -71,7 +71,7 @@ Ext.define('Pente.lib.Machine', {
         var maxV, nlen = this.vectors.length;
         var pt, block;
 
-        var turn = this.turnStore.who();
+        var turn = this.boardStateStore.who();
         if (turn !== pieceT.PT_PLAYER_TWO)
             return false;
 

@@ -60,39 +60,50 @@ Ext.define('Pente.view.BoardComponent', {
         this.height = size.height;
         this.width = size.width;
 
-        this.pieceGroup = Ext.create('Ext.draw.CompositeSprite', { surface: this });
+        this.playerOnePieces = Ext.create('Ext.draw.CompositeSprite', { surface: this });
+        this.playerTwoPieces = Ext.create('Ext.draw.CompositeSprite', { surface: this });
 
         this.callParent(arguments);
     },
 
-    drawPiece: function (piece) {
+    drawPiece: function (piece, color) {
         var pt = Pente.model.Piece;
         var bt = Pente.lib.Board;
         var r = bt.cxPiece / 2;
         var ptOrigin = this.getOrigin({x: piece.data.x, y: piece.data.y});
-        var color = piece.data.who === pt.PT_PLAYER_ONE ? '#008000' : '#800000';
+        var sColor = Ext.String.format('#{0}', color);
 
         var sprite = this.surface.add({
             type: 'circle',
-            fill: color,
+            fill: sColor,
             stroke: '#000000',
             'stroke-width': 1,
             opacity: 1,
             radius: r,
             x: ptOrigin.x,
-            y: ptOrigin.y});
+            y: ptOrigin.y
+        });
 
+        // add piece to appropriate composite sprite
         var key = bt.key(piece.data.x, piece.data.y);
-        this.pieceGroup.add(key, sprite);
+        if (piece.data.who === pt.PT_PLAYER_ONE) {
+            this.playerOnePieces.add(key, sprite);
+        } else {
+            this.playerTwoPieces.add(key, sprite);
+        }
+
         sprite.show(true);
     },
 
     removePiece: function (pt) {
         var bt = Pente.lib.Board;
         var key = bt.key(pt.x, pt.y);
-        var sprite = this.pieceGroup.get(key);
+        var sprite = this.playerOnePieces.get(key);
         if (sprite) {
-            this.pieceGroup.remove(sprite);
+            this.playerOnePieces.remove(sprite);
+            this.surface.remove(sprite, true);
+        } else if ((sprite = this.playerTwoPieces.get(key))) {
+            this.playerTwoPieces.remove(sprite);
             this.surface.remove(sprite, true);
         }
     },
@@ -115,5 +126,15 @@ Ext.define('Pente.view.BoardComponent', {
         for (var i = 0; i < nlength; ++i) {
             Ext.fly(items[i]).setStyle('stroke', color);
         }
+    },
+
+    setPlayerOneColor: function (color) {
+        var sColor = Ext.String.format('#{0}', color);
+        this.playerOnePieces.setAttributes({fill: sColor}, true);
+    },
+
+    setPlayerTwoColor: function (color) {
+        var sColor = Ext.String.format('#{0}', color);
+        this.playerTwoPieces.setAttributes({fill: sColor}, true);
     }
 });

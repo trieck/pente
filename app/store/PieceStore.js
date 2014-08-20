@@ -3,7 +3,7 @@ Ext.define('Pente.store.PieceStore', {
     model: 'Pente.model.Piece',
     uses: 'Pente.lib.Board',
     autoSync: true,
-    autoLoad: true,
+    autoLoad: false,
     proxy: {
         type: 'sessionstorage',
         id: 'PieceKey',

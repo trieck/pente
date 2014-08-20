@@ -15,9 +15,9 @@ Ext.define('Pente.view.View', {
         this.callParent(arguments);
     },
 
-    drawPiece: function (piece) {
+    drawPiece: function (piece, color) {
         var bc = this.query('board-component')[0];
-        bc.drawPiece(piece);
+        bc.drawPiece(piece, color);
     },
 
     removePiece: function (pt) {
@@ -37,5 +37,15 @@ Ext.define('Pente.view.View', {
     setGridColor: function (color) {
         var bc = this.query('board-component')[0];
         bc.setGridColor(color);
+    },
+
+    setPlayerOneColor: function (color) {
+        var bc = this.query('board-component')[0];
+        bc.setPlayerOneColor(color);
+    },
+
+    setPlayerTwoColor: function (color) {
+        var bc = this.query('board-component')[0];
+        bc.setPlayerTwoColor(color);
     }
 });
