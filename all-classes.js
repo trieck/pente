@@ -5,7 +5,9 @@ Ext.define('Pente.model.Piece', {
     extend: 'Ext.data.Model',
     statics: {
         PT_PLAYER_ONE: 1,
-        PT_PLAYER_TWO: 2
+        PT_PLAYER_TWO: 2,
+        PT_PLAYER_ONE_DEFAULT_COLOR: '008000',
+        PT_PLAYER_TWO_DEFAULT_COLOR: '800000'
     },
     fields: [
         { name: 'key', type: 'int' },
@@ -77,39 +79,50 @@ Ext.define('Pente.view.BoardComponent', {
         this.height = size.height;
         this.width = size.width;
 
-        this.pieceGroup = Ext.create('Ext.draw.CompositeSprite', { surface: this });
+        this.playerOnePieces = Ext.create('Ext.draw.CompositeSprite', { surface: this });
+        this.playerTwoPieces = Ext.create('Ext.draw.CompositeSprite', { surface: this });
 
         this.callParent(arguments);
     },
 
-    drawPiece: function (piece) {
+    drawPiece: function (piece, color) {
         var pt = Pente.model.Piece;
         var bt = Pente.lib.Board;
         var r = bt.cxPiece / 2;
         var ptOrigin = this.getOrigin({x: piece.data.x, y: piece.data.y});
-        var color = piece.data.who === pt.PT_PLAYER_ONE ? '#008000' : '#800000';
+        var sColor = Ext.String.format('#{0}', color);
 
         var sprite = this.surface.add({
             type: 'circle',
-            fill: color,
+            fill: sColor,
             stroke: '#000000',
             'stroke-width': 1,
             opacity: 1,
             radius: r,
             x: ptOrigin.x,
-            y: ptOrigin.y});
+            y: ptOrigin.y
+        });
 
+        // add piece to appropriate composite sprite
         var key = bt.key(piece.data.x, piece.data.y);
-        this.pieceGroup.add(key, sprite);
+        if (piece.data.who === pt.PT_PLAYER_ONE) {
+            this.playerOnePieces.add(key, sprite);
+        } else {
+            this.playerTwoPieces.add(key, sprite);
+        }
+
         sprite.show(true);
     },
 
     removePiece: function (pt) {
         var bt = Pente.lib.Board;
         var key = bt.key(pt.x, pt.y);
-        var sprite = this.pieceGroup.get(key);
+        var sprite = this.playerOnePieces.get(key);
         if (sprite) {
-            this.pieceGroup.remove(sprite);
+            this.playerOnePieces.remove(sprite);
+            this.surface.remove(sprite, true);
+        } else if ((sprite = this.playerTwoPieces.get(key))) {
+            this.playerTwoPieces.remove(sprite);
             this.surface.remove(sprite, true);
         }
     },
@@ -132,6 +145,16 @@ Ext.define('Pente.view.BoardComponent', {
         for (var i = 0; i < nlength; ++i) {
             Ext.fly(items[i]).setStyle('stroke', color);
         }
+    },
+
+    setPlayerOneColor: function (color) {
+        var sColor = Ext.String.format('#{0}', color);
+        this.playerOnePieces.setAttributes({fill: sColor}, true);
+    },
+
+    setPlayerTwoColor: function (color) {
+        var sColor = Ext.String.format('#{0}', color);
+        this.playerTwoPieces.setAttributes({fill: sColor}, true);
     }
 });
 /**
@@ -393,10 +416,15 @@ Ext.define('Pente.lib.MapStore', {
     }
 });
 
-Ext.define('Pente.model.Turn', {
+Ext.define('Pente.model.BoardState', {
     extend: 'Ext.data.Model',
     fields: [
-        { name: 'who', type: 'int' }
+        { name: 'who', type: 'int' },
+        { name: 'table-color', type: 'string' },
+        { name: 'board-color', type: 'string' },
+        { name: 'grid-color', type: 'string' },
+        { name: 'player-one-color', type: 'string' },
+        { name: 'player-two-color', type: 'string' }
     ]
 });
 
@@ -417,9 +445,9 @@ Ext.define('Pente.view.View', {
         this.callParent(arguments);
     },
 
-    drawPiece: function (piece) {
+    drawPiece: function (piece, color) {
         var bc = this.query('board-component')[0];
-        bc.drawPiece(piece);
+        bc.drawPiece(piece, color);
     },
 
     removePiece: function (pt) {
@@ -439,6 +467,16 @@ Ext.define('Pente.view.View', {
     setGridColor: function (color) {
         var bc = this.query('board-component')[0];
         bc.setGridColor(color);
+    },
+
+    setPlayerOneColor: function (color) {
+        var bc = this.query('board-component')[0];
+        bc.setPlayerOneColor(color);
+    },
+
+    setPlayerTwoColor: function (color) {
+        var bc = this.query('board-component')[0];
+        bc.setPlayerTwoColor(color);
     }
 });
 Ext.define('Pente.store.PieceStore', {
@@ -446,7 +484,7 @@ Ext.define('Pente.store.PieceStore', {
     model: 'Pente.model.Piece',
     uses: 'Pente.lib.Board',
     autoSync: true,
-    autoLoad: true,
+    autoLoad: false,
     proxy: {
         type: 'sessionstorage',
         id: 'PieceKey',
@@ -474,17 +512,17 @@ Ext.define('Pente.store.PieceStore', {
     }
 });
 
-Ext.define('Pente.store.TurnStore', {
+Ext.define('Pente.store.BoardStateStore', {
     extend: 'Ext.data.Store',
-    model: 'Pente.model.Turn',
+    model: 'Pente.model.BoardState',
     uses: 'Pente.model.Piece',
     autoSync: true,
-    autoLoad: true,
+    autoLoad: false,
     proxy: {
         type: 'sessionstorage',
-        id: 'TurnKey',
+        id: 'BoardStateKey',
         reader: {
-            model: 'Pente.model.Turn'
+            model: 'Pente.model.BoardState'
         }
     },
     changeTurns: function () {
@@ -494,29 +532,103 @@ Ext.define('Pente.store.TurnStore', {
         record.dirty = true;
         this.sync();
     },
+
     who: function () {
         var record = this.getRecord();
         return record.data.who;
     },
+
+    setTurn: function (turn) {
+        var record = this.getRecord();
+        record.data.who = turn;
+        record.dirty = true;
+        this.sync();
+    },
+
+    setTableColor: function (color) {
+        var record = this.getRecord();
+        record.data['table-color'] = color;
+        record.dirty = true;
+        this.sync();
+    },
+
+    setBoardColor: function (color) {
+        var record = this.getRecord();
+        record.data['board-color'] = color;
+        record.dirty = true;
+        this.sync();
+    },
+
+    setGridColor: function (color) {
+        var record = this.getRecord();
+        record.data['grid-color'] = color;
+        record.dirty = true;
+        this.sync();
+    },
+
+    setPlayerOneColor: function (color) {
+        var record = this.getRecord();
+        record.data['player-one-color'] = color;
+        record.dirty = true;
+        this.sync();
+    },
+
+    setPlayerTwoColor: function (color) {
+        var record = this.getRecord();
+        record.data['player-two-color'] = color;
+        record.dirty = true;
+        this.sync();
+    },
+
+    tableColor: function () {
+        var record = this.getRecord();
+        return record.data['table-color'];
+    },
+
+    boardColor: function () {
+        var record = this.getRecord();
+        return record.data['board-color'];
+    },
+
+    gridColor: function () {
+        var record = this.getRecord();
+        return record.data['grid-color'];
+    },
+
+    playerOneColor: function () {
+        var record = this.getRecord();
+        return record.data['player-one-color'];
+    },
+
+    playerTwoColor: function () {
+        var record = this.getRecord();
+        return record.data['player-two-color'];
+    },
+
     getRecord: function () {
         var pt = Pente.model.Piece;
         var record = this.getAt(0);
         if (!record) {
-            record = this.add({who: pt.PT_PLAYER_ONE})[0];
+            record = this.add({ who: pt.PT_PLAYER_ONE })[0];
         }
         return record;
     },
+
     removeAll: function () {
         this.callParent(arguments);
         this.proxy.clear();
         this.proxy.initialize();
+    },
+
+    empty: function () {
+        return this.getTotalCount() === 0;
     }
 });
 
 Ext.define('Pente.controller.Controller', {
         extend: 'Ext.app.Controller',
         models: [ 'Pente.model.Piece' ],
-        stores: [ 'Pente.store.PieceStore', 'Pente.store.TurnStore' ],
+        stores: [ 'Pente.store.PieceStore', 'Pente.store.BoardStateStore' ],
         views: [ 'Pente.view.View' ],
         uses: [ 'Pente.lib.Machine'],
         refs: [
@@ -524,13 +636,17 @@ Ext.define('Pente.controller.Controller', {
         ],
 
         init: function () {
-            var store = this.getPenteStorePieceStoreStore();
-            store.on("load", this.onStoreLoad, this);
-            store.on("add", this.onStoreAdd, this);
-            store.on("bulkremove", this.onStoreBulkRemove, this);
+            var store = this.getPenteStoreBoardStateStoreStore();
+            store.on('load', this.onStoreLoadBoard, this);
+
+            store = this.getPenteStorePieceStoreStore();
+            store.on('load', this.onStoreLoadPieces, this);
+            store.on('add', this.onStoreAddPieces, this);
+            store.on('bulkremove', this.onStoreBulkRemovePieces, this);
+
             this.control({
                 'pente-view': {
-                    render: this.onViewRendered
+                    afterrender: this.onViewAfterRender
                 },
                 'pente-toolbar > button#newButton': {
                     click: this.onNewGame
@@ -543,6 +659,12 @@ Ext.define('Pente.controller.Controller', {
                 },
                 '#grid-picker': {
                     select: this.onGridColor
+                },
+                '#player-one-picker': {
+                    select: this.onPlayerOneColor
+                },
+                '#player-two-picker': {
+                    select: this.onPlayerTwoColor
                 }
             });
         },
@@ -551,8 +673,15 @@ Ext.define('Pente.controller.Controller', {
             this.machine = Ext.create('Pente.lib.Machine');
         },
 
-        onViewRendered: function () {
-            var view = this.getPenteView();
+        onViewAfterRender: function (view) {
+            // load the board state store
+            var store = this.getPenteStoreBoardStateStoreStore();
+            store.load();
+
+            // load the piece store
+            store = this.getPenteStorePieceStoreStore();
+            store.load();
+
             view.body.on('click', Ext.bind(this.onClicked, this));
         },
 
@@ -610,25 +739,25 @@ Ext.define('Pente.controller.Controller', {
         },
 
         changeTurns: function () {
-            var store = this.getPenteStoreTurnStoreStore();
+            var store = this.getPenteStoreBoardStateStoreStore();
             store.changeTurns();
         },
 
         getPiece: function (x, y) {
-            var store = this.getPenteStoreTurnStoreStore();
+            var store = this.getPenteStoreBoardStateStoreStore();
             var key = Pente.lib.Board.key(x, y);
             return { key: key, x: x, y: y, who: store.who() };
         },
 
-        onStoreLoad: function (store, records, successful, eOpts) {
+        onStoreLoadPieces: function (store, records, successful, eOpts) {
             this.addToView(records);
         },
 
-        onStoreAdd: function (store, records, index, eOpts) {
+        onStoreAddPieces: function (store, records, index, eOpts) {
             this.addToView(records);
         },
 
-        onStoreBulkRemove: function (store, records, indexes, isMove, eOpts) {
+        onStoreBulkRemovePieces: function (store, records, indexes, isMove, eOpts) {
             var view = this.getPenteView();
             var len = records.length;
             for (var i = 0; i < len; ++i) {
@@ -640,32 +769,110 @@ Ext.define('Pente.controller.Controller', {
         addToView: function (records) {
             var view = this.getPenteView();
             var len = records.length;
+            var piece, color;
+
             for (var i = 0; i < len; ++i) {
-                view.drawPiece(records[i]);
+                piece = records[i];
+                color = this.getPieceColor(piece);
+                view.drawPiece(records[i], color);
             }
         },
 
+        getPieceColor: function (piece) {
+            var store = this.getPenteStoreBoardStateStoreStore();
+            var pt = Pente.model.Piece;
+            var color;
+
+            if (piece.data.who === pt.PT_PLAYER_ONE) {
+                if (store.empty()) {
+                    color = pt.PT_PLAYER_ONE_DEFAULT_COLOR;
+                } else {
+                    color = store.playerOneColor();
+                    color = color.length ? color : pt.PT_PLAYER_ONE_DEFAULT_COLOR;
+                }
+            } else {
+                if (store.empty()) {
+                    color = pt.PT_PLAYER_TWO_DEFAULT_COLOR;
+                } else {
+                    color = store.playerTwoColor();
+                    color = color.length ? color : pt.PT_PLAYER_TWO_DEFAULT_COLOR;
+                }
+            }
+
+            return color;
+        },
+
         onNewGame: function () {
+            var pt = Pente.model.Piece;
+
             var store = this.getPenteStorePieceStoreStore();
             store.removeAll();
 
-            store = this.getPenteStoreTurnStoreStore();
-            store.removeAll();
+            store = this.getPenteStoreBoardStateStoreStore();
+            store.setTurn(pt.PT_PLAYER_ONE);
         },
 
         onTableColor: function (picker, color, eOpts) {
+            var store = this.getPenteStoreBoardStateStoreStore();
             var view = this.getPenteView();
             view.setColor(color);
+            store.setTableColor(color);
         },
 
         onBoardColor: function (picker, color, eOpts) {
+            var store = this.getPenteStoreBoardStateStoreStore();
             var view = this.getPenteView();
             view.setBoardColor(color);
+            store.setBoardColor(color);
         },
 
         onGridColor: function (picker, color, eOpts) {
+            var store = this.getPenteStoreBoardStateStoreStore();
             var view = this.getPenteView();
             view.setGridColor(color);
+            store.setGridColor(color);
+        },
+
+        onPlayerOneColor: function (picker, color, eOpts) {
+            var store = this.getPenteStoreBoardStateStoreStore();
+            var view = this.getPenteView();
+            view.setPlayerOneColor(color);
+            store.setPlayerOneColor(color);
+        },
+
+        onPlayerTwoColor: function (picker, color, eOpts) {
+            var store = this.getPenteStoreBoardStateStoreStore();
+            var view = this.getPenteView();
+            view.setPlayerTwoColor(color);
+            store.setPlayerTwoColor(color);
+        },
+
+        onStoreLoadBoard: function (store, records, successful, eOpts) {
+            var view = this.getPenteView();
+            var value;
+
+            if (successful && records.length > 0) {
+                value = records[0].data['table-color'];
+                if (value.length) {
+                    view.setColor(value);
+                }
+                value = records[0].data['board-color'];
+                if (value.length) {
+                    view.setBoardColor(value);
+                }
+                value = records[0].data['grid-color'];
+                if (value.length) {
+                    view.setGridColor(value);
+                }
+                value = records[0].data['player-one-color'];
+                if (value.length) {
+                    view.setPlayerOneColor(value);
+                }
+                value = records[0].data['player-two-color'];
+                if (value.length) {
+                    view.setPlayerTwoColor(value);
+                }
+            }
         }
     }
 );
@@ -749,7 +956,7 @@ Ext.define('Pente.lib.Machine', {
 
     constructor: function () {
         this.pieceStore = Ext.getStore('Pente.store.PieceStore');
-        this.turnStore = Ext.getStore('Pente.store.TurnStore');
+        this.boardStateStore = Ext.getStore('Pente.store.BoardStateStore');
         this.generate();
     },
 
@@ -807,7 +1014,7 @@ Ext.define('Pente.lib.Machine', {
         var maxV, nlen = this.vectors.length;
         var pt, block;
 
-        var turn = this.turnStore.who();
+        var turn = this.boardStateStore.who();
         if (turn !== pieceT.PT_PLAYER_TWO)
             return false;
 

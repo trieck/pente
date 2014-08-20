@@ -25,8 +25,8 @@
                     "path": "app/lib/"
                 },
                 {
-                    "clsName": "Pente.model.Turn",
-                    "name": "Turn.js",
+                    "clsName": "Pente.model.BoardState",
+                    "name": "BoardState.js",
                     "path": "app/model/"
                 },
                 {
@@ -40,8 +40,8 @@
                     "path": "app/store/"
                 },
                 {
-                    "clsName": "Pente.store.TurnStore",
-                    "name": "TurnStore.js",
+                    "clsName": "Pente.store.BoardStateStore",
+                    "name": "BoardStateStore.js",
                     "path": "app/store/"
                 },
                 {
