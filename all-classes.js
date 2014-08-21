@@ -621,7 +621,7 @@ Ext.define('Pente.store.BoardStateStore', {
     },
 
     empty: function () {
-        return this.getTotalCount() === 0;
+        return this.getCount() === 0;
     }
 });
 
