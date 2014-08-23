@@ -22,7 +22,8 @@ Ext.define('Pente.view.BoardComponent', {
             fill: '#fff0d4',
             stroke: '#c0c0c0',
             x: bt.cxBorder,
-            y: bt.cyBorder
+            y: bt.cyBorder,
+            group: 'board'
         });
 
         // draw vertical lines
@@ -34,7 +35,8 @@ Ext.define('Pente.view.BoardComponent', {
                 type: 'path',
                 path: path,
                 stroke: '#c0c0c0',
-                'stroke-width': 0.5
+                'stroke-width': 0.5,
+                group: 'grid-lines'
             };
             this.items.push(item);
             ptStart.x += cx;
@@ -49,7 +51,8 @@ Ext.define('Pente.view.BoardComponent', {
                 type: 'path',
                 path: path,
                 stroke: '#c0c0c0',
-                'stroke-width': 0.5
+                'stroke-width': 0.5,
+                group: 'grid-lines'
             };
             this.items.push(item);
             ptStart.y += cy;
@@ -117,15 +120,15 @@ Ext.define('Pente.view.BoardComponent', {
     },
 
     setBoardColor: function (color) {
-        Ext.fly('pente-board').setStyle('fill', color);
+        var sColor = Ext.String.format('#{0}', color);
+        var boards = this.surface.getGroup('board');
+        boards.setAttributes({fill: sColor}, true);
     },
 
     setGridColor: function (color) {
-        var items = Ext.query('path');
-        var nlength = items.length;
-        for (var i = 0; i < nlength; ++i) {
-            Ext.fly(items[i]).setStyle('stroke', color);
-        }
+        var items = this.surface.getGroup('grid-lines');
+        var sColor = Ext.String.format('#{0}', color);
+        items.setAttributes({stroke: sColor}, true);
     },
 
     setPlayerOneColor: function (color) {

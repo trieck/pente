@@ -94,7 +94,7 @@ Ext.define('Pente.lib.Toolbar', {
             text: 'About Pente',
             iconCls: 'help',
             focusCls: '',
-            id: 'helpButton'
+            id: 'aboutButton'
         }
     ],
     initComponent: function () {

@@ -41,7 +41,8 @@ Ext.define('Pente.view.BoardComponent', {
             fill: '#fff0d4',
             stroke: '#c0c0c0',
             x: bt.cxBorder,
-            y: bt.cyBorder
+            y: bt.cyBorder,
+            group: 'board'
         });
 
         // draw vertical lines
@@ -53,7 +54,8 @@ Ext.define('Pente.view.BoardComponent', {
                 type: 'path',
                 path: path,
                 stroke: '#c0c0c0',
-                'stroke-width': 0.5
+                'stroke-width': 0.5,
+                group: 'grid-lines'
             };
             this.items.push(item);
             ptStart.x += cx;
@@ -68,7 +70,8 @@ Ext.define('Pente.view.BoardComponent', {
                 type: 'path',
                 path: path,
                 stroke: '#c0c0c0',
-                'stroke-width': 0.5
+                'stroke-width': 0.5,
+                group: 'grid-lines'
             };
             this.items.push(item);
             ptStart.y += cy;
@@ -136,15 +139,15 @@ Ext.define('Pente.view.BoardComponent', {
     },
 
     setBoardColor: function (color) {
-        Ext.fly('pente-board').setStyle('fill', color);
+        var sColor = Ext.String.format('#{0}', color);
+        var boards = this.surface.getGroup('board');
+        boards.setAttributes({fill: sColor}, true);
     },
 
     setGridColor: function (color) {
-        var items = Ext.query('path');
-        var nlength = items.length;
-        for (var i = 0; i < nlength; ++i) {
-            Ext.fly(items[i]).setStyle('stroke', color);
-        }
+        var items = this.surface.getGroup('grid-lines');
+        var sColor = Ext.String.format('#{0}', color);
+        items.setAttributes({stroke: sColor}, true);
     },
 
     setPlayerOneColor: function (color) {
@@ -648,7 +651,7 @@ Ext.define('Pente.controller.Controller', {
                 'pente-view': {
                     afterrender: this.onViewAfterRender
                 },
-                'pente-toolbar > button#newButton': {
+                '#newButton': {
                     click: this.onNewGame
                 },
                 '#table-picker': {
@@ -665,6 +668,9 @@ Ext.define('Pente.controller.Controller', {
                 },
                 '#player-two-picker': {
                     select: this.onPlayerTwoColor
+                },
+                '#aboutButton': {
+                    click: this.onAbout
                 }
             });
         },
@@ -873,6 +879,26 @@ Ext.define('Pente.controller.Controller', {
                     view.setPlayerTwoColor(value);
                 }
             }
+        },
+
+        onAbout: function () {
+            Ext.create('Ext.window.Window', {
+                bodyStyle: 'background:#fff; padding:10px;',
+                title: 'About Pente for ExtJS',
+                titleAlign: 'center',
+                height: 200,
+                width: 400,
+                modal: true,
+                resizable: false,
+                buttons: [
+                    {
+                        text: 'OK',
+                        handler: function () {
+                            this.up('window').close();
+                        }
+                    }
+                ]
+            }).show();
         }
     }
 );
@@ -1653,7 +1679,7 @@ Ext.define('Pente.lib.Toolbar', {
             text: 'About Pente',
             iconCls: 'help',
             focusCls: '',
-            id: 'helpButton'
+            id: 'aboutButton'
         }
     ],
     initComponent: function () {

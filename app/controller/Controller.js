@@ -21,7 +21,7 @@ Ext.define('Pente.controller.Controller', {
                 'pente-view': {
                     afterrender: this.onViewAfterRender
                 },
-                'pente-toolbar > button#newButton': {
+                '#newButton': {
                     click: this.onNewGame
                 },
                 '#table-picker': {
@@ -38,6 +38,9 @@ Ext.define('Pente.controller.Controller', {
                 },
                 '#player-two-picker': {
                     select: this.onPlayerTwoColor
+                },
+                '#aboutButton': {
+                    click: this.onAbout
                 }
             });
         },
@@ -246,6 +249,26 @@ Ext.define('Pente.controller.Controller', {
                     view.setPlayerTwoColor(value);
                 }
             }
+        },
+
+        onAbout: function () {
+            Ext.create('Ext.window.Window', {
+                bodyStyle: 'background:#fff; padding:10px;',
+                title: 'About Pente for ExtJS',
+                titleAlign: 'center',
+                height: 200,
+                width: 400,
+                modal: true,
+                resizable: false,
+                buttons: [
+                    {
+                        text: 'OK',
+                        handler: function () {
+                            this.up('window').close();
+                        }
+                    }
+                ]
+            }).show();
         }
     }
 );
