@@ -253,11 +253,11 @@ Ext.define('Pente.controller.Controller', {
 
         onAbout: function () {
             Ext.create('Ext.window.Window', {
-                bodyStyle: 'background:#fff; padding:10px;',
+                bodyStyle: 'background:#fff; padding: 10px',
                 title: 'About Pente for ExtJS',
                 titleAlign: 'center',
                 height: 200,
-                width: 400,
+                width: 250,
                 modal: true,
                 resizable: false,
                 buttons: [
@@ -267,7 +267,8 @@ Ext.define('Pente.controller.Controller', {
                             this.up('window').close();
                         }
                     }
-                ]
+                ],
+                html: '<h1>Pente for ExtJS</h1><br/>Version: 0.0.1<br/>By: Thomas A. Rieck'
             }).show();
         }
     }
