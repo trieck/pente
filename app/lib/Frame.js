@@ -1,6 +1,6 @@
 Ext.define('Pente.lib.Frame', {
     extend: 'Ext.window.Window',
-    requires: [ 'Pente.lib.Toolbar', 'Pente.lib.Statuspanel' ],
+    requires: [ 'Pente.lib.Toolbar', 'Pente.lib.Statusbar' ],
     alias: 'pente-frame',
     frame: true,
     closable: false,
@@ -12,6 +12,6 @@ Ext.define('Pente.lib.Frame', {
     dockedItems: [
         { xtype: 'pente-toolbar' }
     ],
-    bbar: { xtype: 'pente-statuspanel' },
+    bbar: { xtype: 'pente-statusbar' },
     resizable: false
 });

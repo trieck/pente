@@ -1,14 +1,14 @@
-Ext.define('Pente.store.BoardStateStore', {
+Ext.define('Pente.store.Board', {
     extend: 'Ext.data.Store',
-    model: 'Pente.model.BoardState',
+    model: 'Pente.model.Board',
     uses: 'Pente.model.Piece',
     autoSync: true,
     autoLoad: false,
     proxy: {
         type: 'sessionstorage',
-        id: 'BoardStateKey',
+        id: 'BoardKey',
         reader: {
-            model: 'Pente.model.BoardState'
+            model: 'Pente.model.Board'
         }
     },
     changeTurns: function () {

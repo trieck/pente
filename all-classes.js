@@ -419,7 +419,7 @@ Ext.define('Pente.lib.MapStore', {
     }
 });
 
-Ext.define('Pente.model.BoardState', {
+Ext.define('Pente.model.Board', {
     extend: 'Ext.data.Model',
     fields: [
         { name: 'who', type: 'int' },
@@ -482,7 +482,7 @@ Ext.define('Pente.view.View', {
         bc.setPlayerTwoColor(color);
     }
 });
-Ext.define('Pente.store.PieceStore', {
+Ext.define('Pente.store.Piece', {
     extend: 'Pente.lib.MapStore',
     model: 'Pente.model.Piece',
     uses: 'Pente.lib.Board',
@@ -507,7 +507,7 @@ Ext.define('Pente.store.PieceStore', {
         this.proxy.initialize();
     },
 
-    who: function(pt) {
+    who: function (pt) {
         var piece = this.getByPoint(pt);
         if (piece) {
             return piece.data.who;
@@ -515,17 +515,17 @@ Ext.define('Pente.store.PieceStore', {
     }
 });
 
-Ext.define('Pente.store.BoardStateStore', {
+Ext.define('Pente.store.Board', {
     extend: 'Ext.data.Store',
-    model: 'Pente.model.BoardState',
+    model: 'Pente.model.Board',
     uses: 'Pente.model.Piece',
     autoSync: true,
     autoLoad: false,
     proxy: {
         type: 'sessionstorage',
-        id: 'BoardStateKey',
+        id: 'BoardKey',
         reader: {
-            model: 'Pente.model.BoardState'
+            model: 'Pente.model.Board'
         }
     },
     changeTurns: function () {
@@ -630,8 +630,8 @@ Ext.define('Pente.store.BoardStateStore', {
 
 Ext.define('Pente.controller.Controller', {
         extend: 'Ext.app.Controller',
-        models: [ 'Pente.model.Piece' ],
-        stores: [ 'Pente.store.PieceStore', 'Pente.store.BoardStateStore' ],
+        models: [ 'Piece' ],
+        stores: [ 'Piece', 'Board' ],
         views: [ 'Pente.view.View' ],
         uses: [ 'Pente.lib.Machine'],
         refs: [
@@ -639,10 +639,10 @@ Ext.define('Pente.controller.Controller', {
         ],
 
         init: function () {
-            var store = this.getPenteStoreBoardStateStoreStore();
+            var store = this.getBoardStore();
             store.on('load', this.onStoreLoadBoard, this);
 
-            store = this.getPenteStorePieceStoreStore();
+            store = this.getPieceStore();
             store.on('load', this.onStoreLoadPieces, this);
             store.on('add', this.onStoreAddPieces, this);
             store.on('bulkremove', this.onStoreBulkRemovePieces, this);
@@ -680,12 +680,12 @@ Ext.define('Pente.controller.Controller', {
         },
 
         onViewAfterRender: function (view) {
-            // load the board state store
-            var store = this.getPenteStoreBoardStateStoreStore();
+            // load the board store
+            var store = this.getBoardStore();
             store.load();
 
             // load the piece store
-            store = this.getPenteStorePieceStoreStore();
+            store = this.getPieceStore();
             store.load();
 
             view.body.on('click', Ext.bind(this.onClicked, this));
@@ -706,7 +706,7 @@ Ext.define('Pente.controller.Controller', {
 
         addPoint: function (x, y) {
             var bt = Pente.lib.Board;
-            var store = this.getPenteStorePieceStoreStore();
+            var store = this.getPieceStore();
             var pt = bt.getSquare(x, y);
             var piece = this.getPiece(pt.x, pt.y);
             if (!store.get(piece.key)) {
@@ -724,7 +724,7 @@ Ext.define('Pente.controller.Controller', {
         },
 
         addPiece: function (piece) {
-            var store = this.getPenteStorePieceStoreStore();
+            var store = this.getPieceStore();
             store.add(piece);
             this.changeTurns();
             return !this.checkWinner();
@@ -745,12 +745,12 @@ Ext.define('Pente.controller.Controller', {
         },
 
         changeTurns: function () {
-            var store = this.getPenteStoreBoardStateStoreStore();
+            var store = this.getBoardStore();
             store.changeTurns();
         },
 
         getPiece: function (x, y) {
-            var store = this.getPenteStoreBoardStateStoreStore();
+            var store = this.getBoardStore();
             var key = Pente.lib.Board.key(x, y);
             return { key: key, x: x, y: y, who: store.who() };
         },
@@ -785,7 +785,7 @@ Ext.define('Pente.controller.Controller', {
         },
 
         getPieceColor: function (piece) {
-            var store = this.getPenteStoreBoardStateStoreStore();
+            var store = this.getBoardStore();
             var pt = Pente.model.Piece;
             var color;
 
@@ -811,43 +811,43 @@ Ext.define('Pente.controller.Controller', {
         onNewGame: function () {
             var pt = Pente.model.Piece;
 
-            var store = this.getPenteStorePieceStoreStore();
+            var store = this.getPieceStore();
             store.removeAll();
 
-            store = this.getPenteStoreBoardStateStoreStore();
+            store = this.getBoardStore();
             store.setTurn(pt.PT_PLAYER_ONE);
         },
 
         onTableColor: function (picker, color, eOpts) {
-            var store = this.getPenteStoreBoardStateStoreStore();
+            var store = this.getBoardStore();
             var view = this.getPenteView();
             view.setColor(color);
             store.setTableColor(color);
         },
 
         onBoardColor: function (picker, color, eOpts) {
-            var store = this.getPenteStoreBoardStateStoreStore();
+            var store = this.getBoardStore();
             var view = this.getPenteView();
             view.setBoardColor(color);
             store.setBoardColor(color);
         },
 
         onGridColor: function (picker, color, eOpts) {
-            var store = this.getPenteStoreBoardStateStoreStore();
+            var store = this.getBoardStore();
             var view = this.getPenteView();
             view.setGridColor(color);
             store.setGridColor(color);
         },
 
         onPlayerOneColor: function (picker, color, eOpts) {
-            var store = this.getPenteStoreBoardStateStoreStore();
+            var store = this.getBoardStore();
             var view = this.getPenteView();
             view.setPlayerOneColor(color);
             store.setPlayerOneColor(color);
         },
 
         onPlayerTwoColor: function (picker, color, eOpts) {
-            var store = this.getPenteStoreBoardStateStoreStore();
+            var store = this.getBoardStore();
             var view = this.getPenteView();
             view.setPlayerTwoColor(color);
             store.setPlayerTwoColor(color);
@@ -982,8 +982,8 @@ Ext.define('Pente.lib.Machine', {
     },
 
     constructor: function () {
-        this.pieceStore = Ext.getStore('Pente.store.PieceStore');
-        this.boardStateStore = Ext.getStore('Pente.store.BoardStateStore');
+        this.pieceStore = Ext.getStore('Piece');
+        this.boardStore = Ext.getStore('Board');
         this.generate();
     },
 
@@ -1041,7 +1041,7 @@ Ext.define('Pente.lib.Machine', {
         var maxV, nlen = this.vectors.length;
         var pt, block;
 
-        var turn = this.boardStateStore.who();
+        var turn = this.boardStore.who();
         if (turn !== pieceT.PT_PLAYER_TWO)
             return false;
 
@@ -1373,177 +1373,39 @@ Ext.define('Pente.lib.Machine', {
     }
 });
 
-Ext.define('Pente.lib.StatusBar', {
+Ext.define('Pente.lib.Statusbar', {
     extend: 'Ext.toolbar.Toolbar',
-    alias: 'widget.statusbar',
-    requires: ['Ext.toolbar.TextItem'],
-    cls: 'x-statusbar',
-    busyIconCls: 'x-status-busy',
-    busyText: 'Loading...',
-    autoClear: 5000,
-    emptyText: '&#160;',
-    activeThreadId: 0,
+    alias: 'widget.pente-statusbar',
+    items: [
+        {
+            xtype: 'tbtext',
+            text: 'Ready'
+        },
+        '->',
+        '-',
+        {
+            xtype: 'tbtext',
+            id: 'player-one-captures'
+        },
+        '-',
+        {
+            xtype: 'tbtext',
+            id: 'player-two-captures'
+        }
+    ],
 
     initComponent: function () {
-        var right = this.statusAlign === 'right';
-
+        var comp, text;
         this.callParent(arguments);
-        this.currIconCls = this.iconCls || this.defaultIconCls;
-        this.statusEl = Ext.create('Ext.toolbar.TextItem', {
-            cls: 'x-status-text ' + (this.currIconCls || ''),
-            text: this.text || this.defaultText || ''
-        });
 
-        if (right) {
-            this.cls += ' x-status-right';
-            this.add('->');
-            this.add(this.statusEl);
-        } else {
-            this.insert(0, this.statusEl);
-            this.insert(1, '->');
-        }
-    },
+        text = Ext.String.format('Player One Captures: {0}', 0);
+        comp = Ext.ComponentManager.get('player-one-captures');
+        comp.setText(text);
 
-    setStatus: function (o) {
-        var me = this;
-
-        o = o || {};
-        Ext.suspendLayouts();
-        if (Ext.isString(o)) {
-            o = {text: o};
-        }
-        if (o.text !== undefined) {
-            me.setText(o.text);
-        }
-        if (o.iconCls !== undefined) {
-            me.setIcon(o.iconCls);
-        }
-
-        if (o.clear) {
-            var c = o.clear,
-                wait = me.autoClear,
-                defaults = {useDefaults: true, anim: true};
-
-            if (Ext.isObject(c)) {
-                c = Ext.applyIf(c, defaults);
-                if (c.wait) {
-                    wait = c.wait;
-                }
-            } else if (Ext.isNumber(c)) {
-                wait = c;
-                c = defaults;
-            } else if (Ext.isBoolean(c)) {
-                c = defaults;
-            }
-
-            c.threadId = this.activeThreadId;
-            Ext.defer(me.clearStatus, wait, me, [c]);
-        }
-        Ext.resumeLayouts(true);
-        return me;
-    },
-
-    clearStatus: function (o) {
-        o = o || {};
-
-        var me = this,
-            statusEl = me.statusEl;
-
-        if (o.threadId && o.threadId !== me.activeThreadId) {
-            // this means the current call was made internally, but a newer
-            // thread has set a message since this call was deferred.  Since
-            // we don't want to overwrite a newer message just ignore.
-            return me;
-        }
-
-        var text = o.useDefaults ? me.defaultText : me.emptyText,
-            iconCls = o.useDefaults ? (me.defaultIconCls ? me.defaultIconCls : '') : '';
-
-        if (o.anim) {
-            // animate the statusEl Ext.Element
-            statusEl.el.puff({
-                remove: false,
-                useDisplay: true,
-                callback: function () {
-                    statusEl.el.show();
-                    me.setStatus({
-                        text: text,
-                        iconCls: iconCls
-                    });
-                }
-            });
-        } else {
-            me.setStatus({
-                text: text,
-                iconCls: iconCls
-            });
-        }
-        return me;
-    },
-
-    setText: function (text) {
-        var me = this;
-        me.activeThreadId++;
-        me.text = text || '';
-        if (me.rendered) {
-            me.statusEl.setText(me.text);
-        }
-        return me;
-    },
-
-    getText: function () {
-        return this.text;
-    },
-
-    setIcon: function (cls) {
-        var me = this;
-
-        me.activeThreadId++;
-        cls = cls || '';
-
-        if (me.rendered) {
-            if (me.currIconCls) {
-                me.statusEl.removeCls(me.currIconCls);
-                me.currIconCls = null;
-            }
-            if (cls.length > 0) {
-                me.statusEl.addCls(cls);
-                me.currIconCls = cls;
-            }
-        } else {
-            me.currIconCls = cls;
-        }
-        return me;
-    },
-
-    showBusy: function (o) {
-        if (Ext.isString(o)) {
-            o = { text: o };
-        }
-        o = Ext.applyIf(o || {}, {
-            text: this.busyText,
-            iconCls: this.busyIconCls
-        });
-        return this.setStatus(o);
+        text = Ext.String.format('Player Two Captures: {0}', 0);
+        comp = Ext.ComponentManager.get('player-two-captures');
+        comp.setText(text);
     }
-});
-
-Ext.define('Pente.lib.Statuspanel', {
-    extend: 'Ext.panel.Panel',
-    alias: 'widget.pente-statuspanel',
-    require: 'Ext.lib.StatusBar',
-
-    bbar: Ext.create('Pente.lib.StatusBar', {
-        id: 'pente-status',
-
-        // defaults to use when the status is cleared:
-        defaultText: 'Default status text',
-        defaultIconCls: 'default-icon',
-
-        // values to set initially:
-        text: 'Ready',
-        iconCls: 'ready-icon'
-    })
 });
 Ext.define('Pente.lib.ColorPicker', {
     extend: 'Ext.picker.Color',
@@ -1693,7 +1555,7 @@ Ext.define('Pente.lib.Toolbar', {
 
 Ext.define('Pente.lib.Frame', {
     extend: 'Ext.window.Window',
-    requires: [ 'Pente.lib.Toolbar', 'Pente.lib.Statuspanel' ],
+    requires: [ 'Pente.lib.Toolbar', 'Pente.lib.Statusbar' ],
     alias: 'pente-frame',
     frame: true,
     closable: false,
@@ -1705,7 +1567,7 @@ Ext.define('Pente.lib.Frame', {
     dockedItems: [
         { xtype: 'pente-toolbar' }
     ],
-    bbar: { xtype: 'pente-statuspanel' },
+    bbar: { xtype: 'pente-statusbar' },
     resizable: false
 });
 

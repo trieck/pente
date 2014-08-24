@@ -1,4 +1,4 @@
-Ext.define('Pente.store.PieceStore', {
+Ext.define('Pente.store.Piece', {
     extend: 'Pente.lib.MapStore',
     model: 'Pente.model.Piece',
     uses: 'Pente.lib.Board',
@@ -23,7 +23,7 @@ Ext.define('Pente.store.PieceStore', {
         this.proxy.initialize();
     },
 
-    who: function(pt) {
+    who: function (pt) {
         var piece = this.getByPoint(pt);
         if (piece) {
             return piece.data.who;

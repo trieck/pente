@@ -1,4 +1,4 @@
-Ext.define('Pente.model.BoardState', {
+Ext.define('Pente.model.Board', {
     extend: 'Ext.data.Model',
     fields: [
         { name: 'who', type: 'int' },

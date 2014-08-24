@@ -25,8 +25,8 @@
                     "path": "app/lib/"
                 },
                 {
-                    "clsName": "Pente.model.BoardState",
-                    "name": "BoardState.js",
+                    "clsName": "Pente.model.Board",
+                    "name": "Board.js",
                     "path": "app/model/"
                 },
                 {
@@ -35,13 +35,13 @@
                     "path": "app/view/"
                 },
                 {
-                    "clsName": "Pente.store.PieceStore",
-                    "name": "PieceStore.js",
+                    "clsName": "Pente.store.Piece",
+                    "name": "Piece.js",
                     "path": "app/store/"
                 },
                 {
-                    "clsName": "Pente.store.BoardStateStore",
-                    "name": "BoardStateStore.js",
+                    "clsName": "Pente.store.Board",
+                    "name": "Board.js",
                     "path": "app/store/"
                 },
                 {
@@ -60,13 +60,8 @@
                     "path": "app/lib/"
                 },
                 {
-                    "clsName": "Pente.lib.StatusBar",
-                    "name": "StatusBar.js",
-                    "path": "app/lib/"
-                },
-                {
-                    "clsName": "Pente.lib.Statuspanel",
-                    "name": "Statuspanel.js",
+                    "clsName": "Pente.lib.Statusbar",
+                    "name": "Statusbar.js",
                     "path": "app/lib/"
                 },
                 {

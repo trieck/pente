@@ -1,7 +1,7 @@
 Ext.define('Pente.controller.Controller', {
         extend: 'Ext.app.Controller',
-        models: [ 'Pente.model.Piece' ],
-        stores: [ 'Pente.store.PieceStore', 'Pente.store.BoardStateStore' ],
+        models: [ 'Piece' ],
+        stores: [ 'Piece', 'Board' ],
         views: [ 'Pente.view.View' ],
         uses: [ 'Pente.lib.Machine'],
         refs: [
@@ -9,10 +9,10 @@ Ext.define('Pente.controller.Controller', {
         ],
 
         init: function () {
-            var store = this.getPenteStoreBoardStateStoreStore();
+            var store = this.getBoardStore();
             store.on('load', this.onStoreLoadBoard, this);
 
-            store = this.getPenteStorePieceStoreStore();
+            store = this.getPieceStore();
             store.on('load', this.onStoreLoadPieces, this);
             store.on('add', this.onStoreAddPieces, this);
             store.on('bulkremove', this.onStoreBulkRemovePieces, this);
@@ -50,12 +50,12 @@ Ext.define('Pente.controller.Controller', {
         },
 
         onViewAfterRender: function (view) {
-            // load the board state store
-            var store = this.getPenteStoreBoardStateStoreStore();
+            // load the board store
+            var store = this.getBoardStore();
             store.load();
 
             // load the piece store
-            store = this.getPenteStorePieceStoreStore();
+            store = this.getPieceStore();
             store.load();
 
             view.body.on('click', Ext.bind(this.onClicked, this));
@@ -76,7 +76,7 @@ Ext.define('Pente.controller.Controller', {
 
         addPoint: function (x, y) {
             var bt = Pente.lib.Board;
-            var store = this.getPenteStorePieceStoreStore();
+            var store = this.getPieceStore();
             var pt = bt.getSquare(x, y);
             var piece = this.getPiece(pt.x, pt.y);
             if (!store.get(piece.key)) {
@@ -94,7 +94,7 @@ Ext.define('Pente.controller.Controller', {
         },
 
         addPiece: function (piece) {
-            var store = this.getPenteStorePieceStoreStore();
+            var store = this.getPieceStore();
             store.add(piece);
             this.changeTurns();
             return !this.checkWinner();
@@ -115,12 +115,12 @@ Ext.define('Pente.controller.Controller', {
         },
 
         changeTurns: function () {
-            var store = this.getPenteStoreBoardStateStoreStore();
+            var store = this.getBoardStore();
             store.changeTurns();
         },
 
         getPiece: function (x, y) {
-            var store = this.getPenteStoreBoardStateStoreStore();
+            var store = this.getBoardStore();
             var key = Pente.lib.Board.key(x, y);
             return { key: key, x: x, y: y, who: store.who() };
         },
@@ -155,7 +155,7 @@ Ext.define('Pente.controller.Controller', {
         },
 
         getPieceColor: function (piece) {
-            var store = this.getPenteStoreBoardStateStoreStore();
+            var store = this.getBoardStore();
             var pt = Pente.model.Piece;
             var color;
 
@@ -181,43 +181,43 @@ Ext.define('Pente.controller.Controller', {
         onNewGame: function () {
             var pt = Pente.model.Piece;
 
-            var store = this.getPenteStorePieceStoreStore();
+            var store = this.getPieceStore();
             store.removeAll();
 
-            store = this.getPenteStoreBoardStateStoreStore();
+            store = this.getBoardStore();
             store.setTurn(pt.PT_PLAYER_ONE);
         },
 
         onTableColor: function (picker, color, eOpts) {
-            var store = this.getPenteStoreBoardStateStoreStore();
+            var store = this.getBoardStore();
             var view = this.getPenteView();
             view.setColor(color);
             store.setTableColor(color);
         },
 
         onBoardColor: function (picker, color, eOpts) {
-            var store = this.getPenteStoreBoardStateStoreStore();
+            var store = this.getBoardStore();
             var view = this.getPenteView();
             view.setBoardColor(color);
             store.setBoardColor(color);
         },
 
         onGridColor: function (picker, color, eOpts) {
-            var store = this.getPenteStoreBoardStateStoreStore();
+            var store = this.getBoardStore();
             var view = this.getPenteView();
             view.setGridColor(color);
             store.setGridColor(color);
         },
 
         onPlayerOneColor: function (picker, color, eOpts) {
-            var store = this.getPenteStoreBoardStateStoreStore();
+            var store = this.getBoardStore();
             var view = this.getPenteView();
             view.setPlayerOneColor(color);
             store.setPlayerOneColor(color);
         },
 
         onPlayerTwoColor: function (picker, color, eOpts) {
-            var store = this.getPenteStoreBoardStateStoreStore();
+            var store = this.getBoardStore();
             var view = this.getPenteView();
             view.setPlayerTwoColor(color);
             store.setPlayerTwoColor(color);
