@@ -96,6 +96,8 @@ Ext.define('Pente.controller.Controller', {
         addPiece: function (piece) {
             var store = this.getPieceStore();
             store.add(piece);
+
+
             this.changeTurns();
             return !this.checkWinner();
         },

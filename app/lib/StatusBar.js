@@ -7,28 +7,38 @@ Ext.define('Pente.lib.Statusbar', {
             text: 'Ready'
         },
         '->',
-        '-',
-        {
-            xtype: 'tbtext',
-            id: 'player-one-captures'
-        },
-        '-',
-        {
-            xtype: 'tbtext',
-            id: 'player-two-captures'
-        }
+        '-'
     ],
 
     initComponent: function () {
-        var comp, text;
         this.callParent(arguments);
+        this.setCaptures(3, 2);
+    },
 
-        text = Ext.String.format('Player One Captures: {0}', 0);
-        comp = Ext.ComponentManager.get('player-one-captures');
-        comp.setText(text);
+    removeCaptures: function () {
+        var items = Ext.ComponentQuery.query('imagecomponent[imgCls^=capture]');
+        Ext.each(items, function (item) {
+            item.destroy();
+        });
+    },
 
-        text = Ext.String.format('Player Two Captures: {0}', 0);
-        comp = Ext.ComponentManager.get('player-two-captures');
-        comp.setText(text);
+    setCaptures: function (playerOne, playerTwo) {
+        var i;
+
+        this.removeCaptures();
+
+        for (i = 0; i < playerOne; ++i) {
+            this.add({
+                xtype: 'imagecomponent',
+                imgCls: 'capture-green'
+            });
+        }
+
+        for (i = 0; i < playerTwo; ++i) {
+            this.add({
+                xtype: 'imagecomponent',
+                imgCls: 'capture-red'
+            });
+        }
     }
 });

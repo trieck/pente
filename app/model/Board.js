@@ -6,6 +6,8 @@ Ext.define('Pente.model.Board', {
         { name: 'board-color', type: 'string' },
         { name: 'grid-color', type: 'string' },
         { name: 'player-one-color', type: 'string' },
-        { name: 'player-two-color', type: 'string' }
+        { name: 'player-two-color', type: 'string' },
+        { name: 'player-one-captures', type: 'int'},
+        { name: 'player-two-captures', type: 'int'}
     ]
 });
